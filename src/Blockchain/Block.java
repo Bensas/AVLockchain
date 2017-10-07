@@ -28,10 +28,7 @@ import java.util.Random;
             this.previousHash = previousHash;
             this.operation = operation;
             this.tree = tree;
-
-            Random rn = new Random(); //TODO no hay otra forma?
-            //generamos un número random entre 0 y 10000
-            this.nonce= rn.nextInt((10001));
+            this.nonce= 0;
         }
 
         /**

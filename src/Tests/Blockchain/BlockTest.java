@@ -8,7 +8,7 @@ import org.junit.Test;
 import java.security.NoSuchAlgorithmException;
 
 public class BlockTest {
-    private static final int ZEROS=5;
+    private static final int ZEROS=6;
     private static final String HASHINGALG = "MD5";
     Block dummyBlock1;
     Block dummyBlock2;
