@@ -31,30 +31,30 @@ public class AVLockchain {
 
     public static void processInput(String input, TreeChain chain){
         System.out.println("Please enter a command below (enter \"exit\" to end the program):");
-//        if (input.contains("add")){
-//            if (chain.add(Integer.parseInt(input.split("add ")[1])))
-//                System.out.println(Integer.parseInt(input.split("add ")[1]) + " added successfully!");
-//            else
-//                System.out.println("There was an error adding the element to the tree.");
-//        }
-//        if (input.contains("remove")){
-//            if (chain.remove(Integer.parseInt(input.split("remove ")[1])))
-//                System.out.println(Integer.parseInt(input.split("remove ")[1]) + " removed successfully!");
-//            else
-//                System.out.println("There was an error removing the element from the tree.");
-//        }
-//        else if (input.contains("lookup")){
-//            if (chain.lookup(Integer.parseInt(input.split("add ")[1])))
-//                System.out.println(Integer.parseInt(input.split("add ")[1]) + " was found!");
-//            else
-//                System.out.println(Integer.parseInt(input.split("add ")[1]) + " was not found. :(");
-//        }
-//        else if (input.contains("validate")){
-//            if (!chain.validate())
-//                System.out.println("Blockchain is invalid. :(");
-//            else
-//                System.out.println("Blockchain is valid!");
-//        }
+        if (input.contains("add")){
+            if (chain.add(Integer.parseInt(input.split("add ")[1])))
+                System.out.println(Integer.parseInt(input.split("add ")[1]) + " added successfully!");
+            else
+                System.out.println("There was an error adding the element to the tree.");
+        }
+        if (input.contains("remove")){
+            if (chain.remove(Integer.parseInt(input.split("remove ")[1])))
+                System.out.println(Integer.parseInt(input.split("remove ")[1]) + " removed successfully!");
+            else
+                System.out.println("There was an error removing the element from the tree.");
+        }
+        else if (input.contains("lookup")){
+            if (chain.lookup(Integer.parseInt(input.split("lookup ")[1])))
+                System.out.println(Integer.parseInt(input.split("lookup ")[1]) + " was found!");
+            else
+                System.out.println(Integer.parseInt(input.split("lookup ")[1]) + " was not found. :(");
+        }
+        else if (input.contains("validate")){
+            if (!chain.validate())
+                System.out.println("Blockchain is invalid. :(");
+            else
+                System.out.println("Blockchain is valid!");
+        }
 
 
 
@@ -73,7 +73,6 @@ public class AVLockchain {
             e.printStackTrace();
         } catch (Exception e) {
             System.out.println("The blockchain file has been corrupted and thus cannot be loaded.");
-            return null;
         }
         return chain;
     }
