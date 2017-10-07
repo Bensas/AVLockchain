@@ -10,7 +10,7 @@ public class TreeChain implements Serializable{
     //  realizada aun.
     private Block last= null;
     private AVLTree balance= new AVLTree();
-    private int size= 0;
+    private int size = 0;
 
     public boolean add(int element){
         boolean result = balance.add(element);
