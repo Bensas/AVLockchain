@@ -64,7 +64,7 @@ public class AVLTree {
         return current;
     }
 
-    protected Node rotateWithLeftChild (Node k2){
+    private Node rotateWithLeftChild (Node k2){
         Node k1 = k2.left;
 
         k2.left = k1.right;
@@ -76,12 +76,12 @@ public class AVLTree {
         return (k1);
     }
 
-    protected Node doubleWithLeftChild (Node k3){
+    private Node doubleWithLeftChild (Node k3){
         k3.left = rotateWithRightChild (k3.left);
         return rotateWithLeftChild (k3);
     }
 
-    protected Node rotateWithRightChild (Node k1){
+    private Node rotateWithRightChild (Node k1){
         Node k2 = k1.right;
 
         k1.right = k2.left;
@@ -93,7 +93,7 @@ public class AVLTree {
         return (k2);
     }
 
-    protected Node doubleWithRightChild (Node k1){
+    private Node doubleWithRightChild (Node k1){
         k1.right = rotateWithLeftChild (k1.right);
         return rotateWithRightChild (k1);
     }
