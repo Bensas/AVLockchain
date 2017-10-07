@@ -9,10 +9,11 @@ public class TreeChain {
     private AVLTree balance= new AVLTree();
     private int size= 0;
 
-    public void add(int element){
+    public boolean add(int element){
+        boolean result = balance.add(element);
 
         String operation;
-        if(balance.add(element))
+        if(result)
             operation= "add";
         else
             operation= "!add";
@@ -20,13 +21,13 @@ public class TreeChain {
         //esto es porque en el momento me parece mejor guardar un hash que un árbol.
         last= new Block(last, last.getHash(), operation, balance.hashCode());
         size++;
-
+        return result;
     }
 
-    public void remove(int element){
-
+    public boolean remove(int element){
+        boolean result = balance.remove();
         String operation;
-        if(balance.remove()) {
+        if(result) {
             operation = "rmv";
         }
         else
@@ -34,6 +35,7 @@ public class TreeChain {
 
         last= new Block(last, last.getHash(), operation, balance.hashCode());
         size++;
+        return result;
     }
 
     public AVLTree getBalance() {
@@ -78,5 +80,9 @@ public class TreeChain {
             previous= current.getPrevBlock();
         }
         return true;
+    }
+
+    public boolean lookup(int num){
+        return getBalance().find(num);
     }
 }
