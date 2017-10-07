@@ -1,0 +1,82 @@
+package Blockchain;
+import AVLTree.*;
+public class TreeChain {
+
+    //puesto que los bloques contienen transacciones, el primer bloque debe ser null. Poner un bloque que
+    //indique el árbol vacío sería erróneo puesto que ninguna transacción (operación sobre el árbol) fue
+    //realizada aun.
+    private Block last= null;
+    private AVLTree balance= new AVLTree();
+    private int size= 0;
+
+    public void add(int element){
+
+        String operation;
+        if(balance.add(element))
+            operation= "add";
+        else
+            operation= "!add";
+
+        //esto es porque en el momento me parece mejor guardar un hash que un árbol.
+        last= new Block(last, last.getHash(), operation, balance.hashCode());
+        size++;
+
+    }
+
+    public void remove(int element){
+
+        String operation;
+        if(balance.remove()) {
+            operation = "rmv";
+        }
+        else
+            operation="!rmv";
+
+        last= new Block(last, last.getHash(), operation, balance.hashCode());
+        size++;
+    }
+
+    public AVLTree getBalance() {
+        return balance;
+    }
+
+    /*
+    public AVLTree getBalanceAt(int index){
+
+        if(index>=size || index<0)
+            throw new NonExistantTransactionException();
+        if(index== size - 1)
+            return getBalance();
+        Block current= last;
+        while(index>0){
+            current=current.getPrevBlock();
+            index--;
+        }
+        return buildTree(current);
+
+    }
+
+    public AVLTree buildTree(Block last){
+
+        Block current= last;
+        AVLTree tree= new AVLTree();
+
+    }
+    */
+
+    public boolean validate(){
+
+        if(last==null)
+            return true;
+        Block current= last;
+        Block previous= last.getPrevBlock();
+
+        while(previous!=null){
+            if(!current.getPreviousHash().equals(previous.getHash()))
+                return false;
+            current= previous;
+            previous= current.getPrevBlock();
+        }
+        return true;
+    }
+}
