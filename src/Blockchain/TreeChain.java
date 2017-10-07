@@ -89,4 +89,8 @@ public class TreeChain implements Serializable{
     public boolean lookup(int num){
         return getBalance().find(num);
     }
+
+    public int getSize(){
+        return size;
+    }
 }
