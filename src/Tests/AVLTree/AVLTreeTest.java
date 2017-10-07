@@ -14,10 +14,10 @@ public class AVLTreeTest {
     public void Before(){
         tree1 = new AVLTree();
         tree2 = new AVLTree();
-        tree2.add(2);
-        tree2.add(4);
-        tree2.add(5);
-        tree2.add(1);
+        tree2.add(2,10); //TODO ver bien qué valores toma modifierBlock
+        tree2.add(4,11);
+        tree2.add(5,12);
+        tree2.add(1,13);
     }
 
     @Test
@@ -27,8 +27,8 @@ public class AVLTreeTest {
 
     @Test
     public void removeWithMoreThanOneElementReturnsTrue(){
-        tree1.add(12);
-        assertTrue(tree1.remove());
+        tree1.add(12,10);
+        assertTrue(tree1.remove()); // TODO hacer remove
     }
 
     @Test
@@ -43,10 +43,10 @@ public class AVLTreeTest {
 
     @Test
     public void addExistingElementReturnsFalse(){
-        assertFalse(tree2.add(2));
+        assertFalse(tree2.add(2,2));
     }
     @Test
     public void addNotExistingElementReturnsTrue(){
-        assertTrue(tree2.add(124));
+        assertTrue(tree2.add(124,3));
     }
 }

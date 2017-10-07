@@ -1,52 +1,40 @@
 package Tests.Blockchain;
-/*
-COMENTE ESTO PORQUE TENGO QUE ARREGLARLO
+
 import Blockchain.Block;
+import Blockchain.TreeChain;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+
 import java.security.NoSuchAlgorithmException;
-*/
+
 public class BlockTest {
-/*
-    private static final int ZEROS=6;
+
+    private static final int ZEROS=5;
     private static final String HASHINGALG = "MD5";
-    Block dummyBlock1;
-    Block dummyBlock2;
-    //00000000000000000000000000000000 32 bits
+
+    private Block dummyBlock1;
+    //private Block dummyBlock2;
+    private TreeChain blockchain;
+
     @Before
     public void Before() throws NoSuchAlgorithmException{
-        dummyBlock1 = new Block(null,
-                "00000000000000000000000000000000",
-                "add", 0);
-        dummyBlock2 = new Block(dummyBlock1, dummyBlock1.setHash(HASHINGALG),"add",0);
+        blockchain = new TreeChain(ZEROS);
+        blockchain.add(32);
+        dummyBlock1 = blockchain.getLast();
+       /* blockchain.add(55);
+        dummyBlock2 = blockchain.getLast();*/
 
     }
 
-    @Test
-    public void generateHashCreatesUniqueHashOnSameObjectTest() throws NoSuchAlgorithmException{
-
-        Assert.assertEquals(dummyBlock1.setHash(HASHINGALG), dummyBlock1.setHash(HASHINGALG));
-    }*/
-    /*
-    *   Ojo: Este test puede llegar a fallar y el código funcionar bien (ver Principio del Palomar)
-    *   En caso de que falle correrlo nuevamente, si vuelve a fallar, quiere decir que hay un error
-    *   en generateHash
-     */
-/*    @Test
-    public void differentObjectsDifferentHashesTest() throws NoSuchAlgorithmException{
-        Assert.assertNotEquals(dummyBlock1.setHash(HASHINGALG), dummyBlock2.setHash(HASHINGALG));
-
-    }
 
     @Test
     public void proofOfWorkTimeTest() throws NoSuchAlgorithmException{
-        dummyBlock2.setHash(HASHINGALG);
-        dummyBlock2.mine(HASHINGALG, ZEROS);
+        blockchain.mine(dummyBlock1, TreeChain.ENCFUNCTION, blockchain.getZeroes());
         Assert.assertEquals(1,1);
     }
-    */
+
    /* @Test
     public void operationAddIncrementsSize(){
 
