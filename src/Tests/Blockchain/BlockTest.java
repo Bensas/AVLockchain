@@ -1,4 +1,4 @@
-package Tests;
+package Tests.Blockchain;
 
 import Blockchain.Block;
 import org.junit.Assert;
