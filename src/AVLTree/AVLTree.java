@@ -1,8 +1,6 @@
 package AVLTree;
 
-import java.io.Serializable;
-
-public class AVLTree implements Serializable{
+public class AVLTree {
     public static  Node root;
     public AVLTree(){
         root = null;
