@@ -173,6 +173,10 @@ public class AVLTree {
             this.left = left;
             this.right = right;
             }
+
+        public int getBalanceFactor(){
+            return (left == null?0:left.height) - (right == null? 0:right.height);
+        }
     }
 }
 
