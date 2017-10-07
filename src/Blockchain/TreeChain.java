@@ -1,6 +1,9 @@
 package Blockchain;
 import AVLTree.*;
-public class TreeChain {
+
+import java.io.Serializable;
+
+public class TreeChain implements Serializable{
 
     //puesto que los bloques contienen transacciones, el primer bloque debe ser null. Poner un bloque que
     //indique el árbol vacío sería erróneo puesto que ninguna transacción (operación sobre el árbol) fue

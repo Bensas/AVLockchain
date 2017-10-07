@@ -1,4 +1,5 @@
 package Blockchain;
+import java.io.Serializable;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Random;
@@ -14,7 +15,7 @@ import java.util.Random;
      *  - nonce         : Número aleatorio al principio que se lo cambia para
      *                    hacer que el hash empiece con 4 ceros
      */
-    public class Block {
+    public class Block implements Serializable{
         private int index;
         private int tree;
         private Block prevBlock;

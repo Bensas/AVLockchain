@@ -73,7 +73,6 @@ public class AVLockchain {
             e.printStackTrace();
         } catch (Exception e) {
             System.out.println("The blockchain file has been corrupted and thus cannot be loaded.");
-            return null;
         }
         return chain;
     }
