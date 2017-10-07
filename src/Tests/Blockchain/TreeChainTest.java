@@ -1,5 +1,6 @@
 package Tests.Blockchain;
 
+import Blockchain.Block;
 import Blockchain.TreeChain;
 import org.junit.Assert;
 import org.junit.Before;
@@ -12,10 +13,13 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class TreeChainTest {
-    TreeChain chain1;
+    private TreeChain chain1;
+    private Block dummyBlock1;
     @Before
-    public void Before(){
+    public void Before() throws NoSuchAlgorithmException{
         chain1 = new TreeChain(5);
+        chain1.add(23);
+        dummyBlock1 = chain1.getLast();
     }
 
     @Test
@@ -37,5 +41,12 @@ public class TreeChainTest {
     public void removeEmptyChainReturnsFalse(){
         assertFalse(chain1.remove(2));
     }
+
+    @Test
+    public void proofOfWorkTimeTest() throws NoSuchAlgorithmException{
+        chain1.mine(dummyBlock1, TreeChain.ENCFUNCTION, chain1.getZeroes());
+        Assert.assertEquals(1,1);
+    }
+
 
 }
