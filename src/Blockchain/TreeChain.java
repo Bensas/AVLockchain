@@ -93,4 +93,8 @@ public class TreeChain implements Serializable{
     public int getSize(){
         return size;
     }
+
+    public void setZeroes(int zeroes){
+
+    }
 }

@@ -14,7 +14,7 @@ public class AVLockchain {
             chain = new TreeChain();
             System.out.println("A new blockhain has been created.");
         }
-//        chain.setZeroes(Integer.parseInt(args[1]));
+        chain.setZeroes(Integer.parseInt(args[1]));
         System.out.println("Your tree looks like this: ");
         chain.getBalance().printTree();
 
