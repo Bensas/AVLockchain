@@ -5,9 +5,9 @@ import java.io.Serializable;
 
 public class TreeChain implements Serializable{
 
-    //puesto que los bloques contienen transacciones, el primer bloque debe ser null. Poner un bloque que
-    //indique el árbol vacío sería erróneo puesto que ninguna transacción (operación sobre el árbol) fue
-    //realizada aun.
+    //  puesto que los bloques contienen transacciones, el primer bloque debe ser null. Poner un bloque que
+    //  indique el árbol vacío sería erróneo puesto que ninguna transacción (operación sobre el árbol) fue
+    //  realizada aun.
     private Block last= null;
     private AVLTree balance= new AVLTree();
     private int size= 0;
@@ -22,7 +22,8 @@ public class TreeChain implements Serializable{
             operation= "!add";
 
         //esto es porque en el momento me parece mejor guardar un hash que un árbol.
-        last= new Block(last, last.getHash(), operation, balance.hashCode());
+        if(last == null) last = new Block(last, "00000000000000000000000000000000", operation, balance.hashCode());
+        else last = new Block(last, last.getHash(), operation, balance.hashCode());
         size++;
         return result;
     }
