@@ -1,4 +1,4 @@
-package Tests.Blockchain.AVLTree;
+package Tests.AVLTree;
 
 import AVLTree.AVLTree;
 import org.junit.Assert;
