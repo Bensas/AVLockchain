@@ -15,7 +15,7 @@ public class TreeChain implements Serializable{
     private int size = 0;
 
     public boolean add(int element){
-        boolean result = balance.add(element);
+        boolean result = balance.add(element, size);
 
         String operation;
         if(result)
