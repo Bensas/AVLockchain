@@ -1,5 +1,6 @@
 package AVLTree;
 
+import java.util.ArrayList;
 import java.util.Stack;
 
 public class AVLTree {
@@ -159,6 +160,7 @@ public class AVLTree {
         Node left;
         Node right;
         int height;
+        ArrayList<Integer> modifierBlocks = new ArrayList<>();
 
         public Node(int data) {
             this.data = data;
