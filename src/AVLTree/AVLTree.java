@@ -1,7 +1,11 @@
 package AVLTree;
 
+import java.util.ArrayList;
+import java.util.Stack;
+
 public class AVLTree {
     public static  Node root;
+    int size= 0;
     public AVLTree(){
         root = null;
     }
@@ -30,16 +34,24 @@ public class AVLTree {
         return b;
     }
 
-    public boolean add (int data){
-        root = add (data, root);
-        return true;
+    public boolean add (int data, int modifierBlock){
+        int previousSize= size;
+        root = add (data, root, false, modifierBlock);
+        if(size > previousSize)
+            return true;
+        return false;
     }
 
-    private Node add (int data, Node current){
-        if (current == null)
+    private Node add (int data, Node current, Boolean modified, int modifierBlock){
+
+        if (current == null) {
             current = new Node(data);
+            modified= true;
+            current.modifierBlocks.add(modifierBlock);
+            size++;
+        }
         else if (data < current.data){
-            current.left = add(data, current.left);
+            current.left = add(data, current.left, modified, modifierBlock);
             if (height(current.left) - height(current.right) == 2){
                 if (data < current.left.data){
                     current = rotateWithLeftChild(current);
@@ -50,7 +62,7 @@ public class AVLTree {
             }
         }
         else if (data > current.data){
-            current.right = add(data, current.right);
+            current.right = add(data, current.right, modified, modifierBlock);
 
             if ( height(current.right) - height(current.left) == 2)
                 if (data > current.right.data){
@@ -60,6 +72,8 @@ public class AVLTree {
                     current = doubleWithRightChild(current);
                 }
         }
+        if(modified)
+            current.modifierBlocks.add(modifierBlock);
         current.height = max(height(current.left), height(current.right)) + 1;
         return current;
     }
@@ -99,40 +113,74 @@ public class AVLTree {
     }
 
     public void printTree(){
-
-        if(root == null)
-            System.out.println();
-        else{
-
-            LevelPriorityQueue list= new LevelPriorityQueue();
-            printR(root, true, 1, list);
-        }
-    }
-
-    private void printR(Node current, boolean isFurtherMostRight, int level, LevelPriorityQueue toBePrinted){
-
-        if(current== null)
-            return;
-
-        toBePrinted.add(current.data, level);
-        if(isFurtherMostRight){
-
-            while(!toBePrinted.isEmpty(level)){
-
-                //aqui iria nuestra manera ascii art de imprimir el arbol, adentro de este loop
-                //se imprimiran solo los elementos del nivel en el que se esta.
+        Stack<Node> s1 = new Stack<>();
+        Stack<Node> s2 = new Stack<>();
+        s1.push(root);
+        int level = 0;
+        while (!s1.isEmpty() || !s2.isEmpty()){
+            if(s1.isEmpty()) {
+                s1 = s2;
+                s2 = new Stack<>();
             }
-            printR(current.left, false, level + 1, toBePrinted);
-            printR(current.right, true, level + 1, toBePrinted);
-            return;
+            System.out.println("Level: " + level++);
+            while (!s1.isEmpty()) {
+                Node aux = s1.pop();
+                System.out.print(aux.data + " (");
+                if(aux.left != null) {
+                    System.out.print(aux.left.data + ", ");
+                    s2.push(aux.left);
+                }
+                if(aux.right != null){
+                    System.out.print(aux.right.data);
+                    s2.push(aux.right);
+                }
+                System.out.println(")");
+            }
         }
-        printR(current.left, false, level + 1, toBePrinted);
-        printR(current.right, false, level + 1, toBePrinted);
-        return;
     }
 
+    /* try with this
+    *         AVLTree avl = new AVLTree();
+        avl.add(5);
+        avl.add(10);
+        avl.add(6);
+        avl.add(1);
+        avl.add(7);
+        avl.printTree();
+    * */
+
+
+    //  MAÑANA LO HAGO (SOY NACHO NEGRO)
     public boolean remove() {
+
+
         return true;
+    }
+
+
+
+    private static class Node {
+        int data;
+        Node left;
+        Node right;
+        int height;
+        ArrayList<Integer> modifierBlocks = new ArrayList<>();
+
+        public Node(int data) {
+            this.data = data;
+            left = null;
+            right = null;
+            }
+
+        public Node(int data, Node left, Node right){
+            this.data = data;
+            this.left = left;
+            this.right = right;
+            }
+
+        public int getBalanceFactor(){
+            return (left == null?0:left.height) - (right == null? 0:right.height);
+        }
     }
 }
 

@@ -14,7 +14,7 @@ public class AVLockchain {
             chain = new TreeChain();
             System.out.println("A new blockhain has been created.");
         }
-//        chain.setZeroes(Integer.parseInt(args[1]));
+        chain.setZeroes(Integer.parseInt(args[1]));
         System.out.println("Your tree looks like this: ");
         chain.getBalance().printTree();
 
@@ -55,9 +55,9 @@ public class AVLockchain {
             else
                 System.out.println("Blockchain is valid!");
         }
-
-
-
+        else if (input.contains("print")){
+            chain.getBalance().printTree();
+        }
     }
 
     public static TreeChain loadChainFromFile(String fileName){
@@ -69,8 +69,8 @@ public class AVLockchain {
             objectinputstream = new ObjectInputStream(fin);
             chain = (TreeChain) objectinputstream.readObject();
             System.out.println("The blockchain was loaded successfully.");
-        } catch (IOException e){
-            e.printStackTrace();
+        } catch (FileNotFoundException e){
+            System.out.println("No blockchain file found.");
         } catch (Exception e) {
             System.out.println("The blockchain file has been corrupted and thus cannot be loaded.");
         }
