@@ -2,7 +2,6 @@ package Blockchain;
 import java.io.Serializable;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Random;
 
     /**
      *  Los bloques que constituyen la blockchain. Cada bloque consta
@@ -32,48 +31,12 @@ import java.util.Random;
             this.nonce= 0;
         }
 
-        /**
-         *  Genera un hash mediante a la función SHA-256 en base al
-         *  indice, el nonce y el previous hash del objecto Block instanciado.
-         *  @throws NoSuchAlgorithmException
-         */
-        private String generateHash(String alg) throws NoSuchAlgorithmException {
-            MessageDigest md = MessageDigest.getInstance(alg);
-            String data = this.index + this.previousHash + this.nonce;
-            md.update(data.getBytes());
-            byte[] digest = md.digest();
-            //convertir los bytes a formato hexa
-            StringBuffer sb = new StringBuffer();
-            for (int i = 0; i < digest.length; i++) {
-                sb.append(Integer.toString((digest[i] & 0xff) + 0x100, 16).substring(1));
-            }
-
-            return sb.toString();
-        }
-
-        public void mine(String alg,int zeros) throws NoSuchAlgorithmException{
-            char[] hashChar = hash.toCharArray();
-            while (!miningCondition(hashChar,zeros)){
-                this.nonce+=1;
-                this.hash=generateHash(alg);
-                //System.out.println(hash);
-                hashChar = hash.toCharArray();
-
-            }
-
-        }
-
-        private boolean miningCondition(char[] hash, int zeros){
-            for (int i=0; i<=zeros; i++){
-                if(hash[i]!=48) return false;
-            }
-            return true;
-        }
-
 
         //getters and setters
 
-
+        public int getNonce(){
+            return nonce;
+        }
 
         public int getIndex(){
             return index;
@@ -91,10 +54,12 @@ import java.util.Random;
             return prevBlock;
         }
 
-        // Para los tests
-        public String setHash(String alg)throws NoSuchAlgorithmException{
-            this.hash=generateHash(alg);
-            return hash;
+        public void setHash(String hash){
+            this.hash=hash;
+        }
+
+        public void incrementNonce(){
+            nonce+=1;
         }
         //getter agregado por josé, se necesita un getter del hash para cuando creas un bloque
         //nuevo para pasar como previousHash
@@ -109,5 +74,6 @@ import java.util.Random;
         public String getPreviousHash() {
             return previousHash;
         }
+
     }
 
