@@ -4,6 +4,7 @@ import java.util.Stack;
 
 public class AVLTree {
     public static  Node root;
+    int size= 0;
     public AVLTree(){
         root = null;
     }
@@ -32,16 +33,24 @@ public class AVLTree {
         return b;
     }
 
-    public boolean add (int data){
-        root = add (data, root);
-        return true;
+    public boolean add (int data, int modifierBlock){
+        int previousSize= size;
+        root = add (data, root, false, modifierBlock);
+        if(size > previousSize)
+            return true;
+        return false;
     }
 
-    private Node add (int data, Node current){
-        if (current == null)
+    private Node add (int data, Node current, Boolean modified, int modifierBlock){
+
+        if (current == null) {
             current = new Node(data);
+            modified= true;
+            current.modifierBlocks.add(modifierBlock);
+            size++;
+        }
         else if (data < current.data){
-            current.left = add(data, current.left);
+            current.left = add(data, current.left, modified, modifierBlock);
             if (height(current.left) - height(current.right) == 2){
                 if (data < current.left.data){
                     current = rotateWithLeftChild(current);
@@ -52,7 +61,7 @@ public class AVLTree {
             }
         }
         else if (data > current.data){
-            current.right = add(data, current.right);
+            current.right = add(data, current.right, modified, modifierBlock);
 
             if ( height(current.right) - height(current.left) == 2)
                 if (data > current.right.data){
@@ -62,6 +71,8 @@ public class AVLTree {
                     current = doubleWithRightChild(current);
                 }
         }
+        if(modified)
+            current.modifierBlocks.add(modifierBlock);
         current.height = max(height(current.left), height(current.right)) + 1;
         return current;
     }

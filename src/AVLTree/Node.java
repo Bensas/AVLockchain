@@ -1,4 +1,7 @@
 package AVLTree;
+
+import java.util.ArrayList;
+
 /**
  *
  * @author Guido
@@ -7,7 +10,8 @@ public class Node{
     int data;
     Node left;
     Node right;
-    int height;
+    int height= 0;
+    ArrayList<Integer> modifierBlocks= new ArrayList<>();
 
     public Node(int data){
         this.data = data;
