@@ -1,32 +1,36 @@
 package Blockchain;
 import AVLTree.*;
-public class TreeChain {
 
-    //  puesto que los bloques contienen transacciones, el primer bloque debe ser null. Poner un bloque que
-    //  indique el árbol vacío sería erróneo puesto que ninguna transacción (operación sobre el árbol) fue
-    //  realizada aun.
+import java.io.Serializable;
+
+public class TreeChain implements Serializable{
+
+    //puesto que los bloques contienen transacciones, el primer bloque debe ser null. Poner un bloque que
+    //indique el árbol vacío sería erróneo puesto que ninguna transacción (operación sobre el árbol) fue
+    //realizada aun.
     private Block last= null;
     private AVLTree balance= new AVLTree();
     private int size= 0;
 
-    public void add(int element){
+    public boolean add(int element){
+        boolean result = balance.add(element);
 
         String operation;
-        if(balance.add(element))
+        if(result)
             operation= "add";
         else
             operation= "!add";
 
         //esto es porque en el momento me parece mejor guardar un hash que un árbol.
-        if(last == null) last = new Block(last, "00000000000000000000000000000000", operation, balance.hashCode());
-        else last = new Block(last, last.getHash(), operation, balance.hashCode());
+        last= new Block(last, last.getHash(), operation, balance.hashCode());
         size++;
+        return result;
     }
 
-    public void remove(int element){
-
+    public boolean remove(int element){
+        boolean result = balance.remove();
         String operation;
-        if(balance.remove()) {
+        if(result) {
             operation = "rmv";
         }
         else
@@ -34,6 +38,7 @@ public class TreeChain {
 
         last= new Block(last, last.getHash(), operation, balance.hashCode());
         size++;
+        return result;
     }
 
     public AVLTree getBalance() {
@@ -78,5 +83,9 @@ public class TreeChain {
             previous= current.getPrevBlock();
         }
         return true;
+    }
+
+    public boolean lookup(int num){
+        return getBalance().find(num);
     }
 }
