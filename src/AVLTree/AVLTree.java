@@ -1,7 +1,5 @@
 package AVLTree;
 
-import java.util.Stack;
-
 public class AVLTree {
     public static  Node root;
     public AVLTree(){
@@ -101,41 +99,37 @@ public class AVLTree {
     }
 
     public void printTree(){
-        Stack<Node> s1 = new Stack<>();
-        Stack<Node> s2 = new Stack<>();
-        s1.push(root);
-        int level = 0;
-        while (!s1.isEmpty() || !s2.isEmpty()){
-            if(s1.isEmpty()) {
-                s1 = s2;
-                s2 = new Stack<>();
-            }
-            System.out.println("Level: " + level++);
-            while (!s1.isEmpty()) {
-                Node aux = s1.pop();
-                System.out.print(aux.data + " (");
-                if(aux.left != null) {
-                    System.out.print(aux.left.data + ", ");
-                    s2.push(aux.left);
-                }
-                if(aux.right != null){
-                    System.out.print(aux.right.data);
-                    s2.push(aux.right);
-                }
-                System.out.println(")");
-            }
+
+        if(root == null)
+            System.out.println();
+        else{
+
+            LevelPriorityQueue list= new LevelPriorityQueue();
+            printR(root, true, 1, list);
         }
     }
 
-    /* try with this
-    *         AVLTree avl = new AVLTree();
-        avl.add(5);
-        avl.add(10);
-        avl.add(6);
-        avl.add(1);
-        avl.add(7);
-        avl.printTree();
-    * */
+    private void printR(Node current, boolean isFurtherMostRight, int level, LevelPriorityQueue toBePrinted){
+
+        if(current== null)
+            return;
+
+        toBePrinted.add(current.data, level);
+        if(isFurtherMostRight){
+
+            while(!toBePrinted.isEmpty(level)){
+
+                //aqui iria nuestra manera ascii art de imprimir el arbol, adentro de este loop
+                //se imprimiran solo los elementos del nivel en el que se esta.
+            }
+            printR(current.left, false, level + 1, toBePrinted);
+            printR(current.right, true, level + 1, toBePrinted);
+            return;
+        }
+        printR(current.left, false, level + 1, toBePrinted);
+        printR(current.right, false, level + 1, toBePrinted);
+        return;
+    }
 
     public boolean remove() {
         return true;
