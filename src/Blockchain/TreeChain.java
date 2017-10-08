@@ -95,8 +95,10 @@ public class TreeChain implements Serializable{
     }
 
     /**
-     *  Genera un hash mediante a la función SHA-256 en base al
+     *  Genera un hash mediante a la función especificada en el argumento alg en base al
      *  indice, el nonce y el previous hash del objecto Block instanciado.
+     *  @param block el bloque en el que se va a generar el hash
+     *  @param alg  El algoritmo de hashing a usar
      *  @throws NoSuchAlgorithmException
      */
     private void generateHash(Block block,String alg) throws NoSuchAlgorithmException {

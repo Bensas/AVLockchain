@@ -7,8 +7,8 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 
 public class AVLTreeTest {
-    AVLTree tree1;
-    AVLTree tree2;
+    private AVLTree tree1;
+    private AVLTree tree2;
 
     @Before
     public void Before(){
