@@ -1,5 +1,7 @@
 package AVLTree;
 
+import java.util.Deque;
+import java.util.LinkedList;
 import java.util.Stack;
 
 public class AVLTree {
@@ -66,63 +68,65 @@ public class AVLTree {
         return current;
     }
 
-    private Node rotateWithLeftChild (Node k2){
+    private Node rotateWithLeftChild(Node k2){
         Node k1 = k2.left;
 
         k2.left = k1.right;
         k1.right = k2;
 
-        k2.height = max(height (k2.left), height (k2.right)) + 1;
-        k1.height = max(height (k1.left), k2.height) + 1;
+        k2.height = max(height(k2.left), height(k2.right)) + 1;
+        k1.height = max(height(k1.left), k2.height) + 1;
 
         return (k1);
     }
 
-    private Node doubleWithLeftChild (Node k3){
-        k3.left = rotateWithRightChild (k3.left);
-        return rotateWithLeftChild (k3);
+    private Node doubleWithLeftChild(Node k3){
+        k3.left = rotateWithRightChild(k3.left);
+        return rotateWithLeftChild(k3);
     }
 
-    private Node rotateWithRightChild (Node k1){
+    private Node rotateWithRightChild(Node k1){
         Node k2 = k1.right;
 
         k1.right = k2.left;
         k2.left = k1;
 
-        k1.height = max(height (k1.left), height (k1.right)) + 1;
-        k2.height = max(height (k2.right), k1.height) + 1;
+        k1.height = max(height(k1.left), height(k1.right)) + 1;
+        k2.height = max(height(k2.right), k1.height) + 1;
 
         return (k2);
     }
 
-    private Node doubleWithRightChild (Node k1){
-        k1.right = rotateWithLeftChild (k1.right);
-        return rotateWithRightChild (k1);
+    private Node doubleWithRightChild(Node k1){
+        k1.right = rotateWithLeftChild(k1.right);
+        return rotateWithRightChild(k1);
     }
 
     public void printTree(){
-        Stack<Node> s1 = new Stack<>();
-        Stack<Node> s2 = new Stack<>();
-        s1.push(root);
-        int level = 0;
-        while (!s1.isEmpty() || !s2.isEmpty()){
-            if(s1.isEmpty()) {
-                s1 = s2;
-                s2 = new Stack<>();
-            }
-            System.out.println("Level: " + level++);
-            while (!s1.isEmpty()) {
-                Node aux = s1.pop();
-                System.out.print(aux.data + " (");
-                if(aux.left != null) {
-                    System.out.print(aux.left.data + ", ");
-                    s2.push(aux.left);
+        if (root != null) {
+            Deque<Node> s1 = new LinkedList<>();
+            Deque<Node> s2 = new LinkedList<>();
+            s1.push(root);
+            int level = 0;
+            while (!s1.isEmpty() || !s2.isEmpty()) {
+                if (s1.isEmpty()) {
+                    s1 = s2;
+                    s2 = new LinkedList<>();
                 }
-                if(aux.right != null){
-                    System.out.print(aux.right.data);
-                    s2.push(aux.right);
+                System.out.println("Level: " + level++);
+                while (!s1.isEmpty()) {
+                    Node aux = s1.pop();
+                    System.out.print(aux.data + " (");
+                    if (aux.left != null) {
+                        System.out.print(aux.left.data + ", ");
+                        s2.push(aux.left);
+                    }
+                    if (aux.right != null) {
+                        System.out.print(aux.right.data);
+                        s2.push(aux.right);
+                    }
+                    System.out.println(")");
                 }
-                System.out.println(")");
             }
         }
     }
