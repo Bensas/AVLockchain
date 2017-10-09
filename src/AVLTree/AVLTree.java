@@ -1,9 +1,6 @@
 package AVLTree;
 
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.ArrayList;
-import java.util.Stack;
+import java.util.*;
 
 public class AVLTree {
     public static  Node root;
@@ -116,9 +113,9 @@ public class AVLTree {
 
     public void printTree(){
         if (root != null) {
-            Deque<Node> s1 = new LinkedList<>();
-            Deque<Node> s2 = new LinkedList<>();
-            s1.push(root);
+            Queue<Node> s1 = new LinkedList<>();
+            Queue<Node> s2 = new LinkedList<>();
+            s1.add(root);
             int level = 0;
             while (!s1.isEmpty() || !s2.isEmpty()) {
                 if (s1.isEmpty()) {
@@ -127,31 +124,21 @@ public class AVLTree {
                 }
                 System.out.println("Level: " + level++);
                 while (!s1.isEmpty()) {
-                    Node aux = s1.pop();
+                    Node aux = s1.remove();
                     System.out.print(aux.data + " (");
                     if (aux.left != null) {
                         System.out.print(aux.left.data + ", ");
-                        s2.push(aux.left);
+                        s2.add(aux.left);
                     }
                     if (aux.right != null) {
                         System.out.print(aux.right.data);
-                        s2.push(aux.right);
+                        s2.add(aux.right);
                     }
                     System.out.println(")");
                 }
             }
         }
     }
-
-    /* try with this
-    *         AVLTree avl = new AVLTree();
-        avl.add(5);
-        avl.add(10);
-        avl.add(6);
-        avl.add(1);
-        avl.add(7);
-        avl.printTree();
-    * */
 
 
     //  MAÑANA LO HAGO (SOY NACHO NEGRO)
