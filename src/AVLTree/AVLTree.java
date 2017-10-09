@@ -148,6 +148,34 @@ public class AVLTree {
         return true;
     }
 
+    public int hashCode(){
+        if (root == null)
+            return -1;
+        ArrayList<Node> prefix = new ArrayList<>();
+        prefix.add(root);
+        Queue<Node> left = new LinkedList<>();
+        Deque<Node> right = new LinkedList<>();
+        if(root.left != null)
+            left.add(root.left);
+        if(root.right != null)
+            right.push(root.right);
+        Node aux;
+        while(!left.isEmpty() || !right.isEmpty()) {
+            if(left.isEmpty()){
+                aux = right.pop();
+                left.add(aux);
+            }
+            while(!left.isEmpty()){
+                aux=left.remove();
+                prefix.add(aux);
+                if(aux.left != null)
+                    left.add(aux.left);
+                if(aux.right != null)
+                    right.push(aux.right);
+            }
+        }
+        return prefix.hashCode();
+    }
 
 
     private static class Node {
@@ -171,6 +199,10 @@ public class AVLTree {
 
         public int getBalanceFactor(){
             return (left == null?0:left.height) - (right == null? 0:right.height);
+        }
+
+        public int hashCode () {
+            return this.data;
         }
     }
 }
