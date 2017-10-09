@@ -2,18 +2,26 @@ package Blockchain;
 import AVLTree.*;
 
 import java.io.Serializable;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 public class TreeChain implements Serializable{
-
+    private static final String FIRSTHASH="00000000000000000000000000000000";
+    public static final String ENCFUNCTION = "MD5";
     //  puesto que los bloques contienen transacciones, el primer bloque debe ser null. Poner un bloque que
     //  indique el árbol vacío sería erróneo puesto que ninguna transacción (operación sobre el árbol) fue
     //  realizada aun.
     private Block last= null;
     private AVLTree balance= new AVLTree();
     private int size = 0;
+    private int zeroes;
 
-    public boolean add(int element){
-        boolean result = balance.add(element);
+    public TreeChain(int zeroes){
+        this.zeroes = zeroes;
+    }
+
+    public boolean add(int element) throws NoSuchAlgorithmException{
+        boolean result = balance.add(element,size);
 
         String operation;
         if(result)
@@ -22,8 +30,8 @@ public class TreeChain implements Serializable{
             operation= "!add";
 
         //esto es porque en el momento me parece mejor guardar un hash que un árbol.
-        if(last == null) last = new Block(last, "00000000000000000000000000000000", operation, balance.hashCode());
-        else last = new Block(last, last.getHash(), operation, balance.hashCode());
+        last = new Block(last, last==null?FIRSTHASH:last.getHash(), operation, balance.hashCode());
+        generateHash(last,ENCFUNCTION); //Después de crear el bloque debe generar el hash
         size++;
         return result;
     }
@@ -46,7 +54,7 @@ public class TreeChain implements Serializable{
         return balance;
     }
 
-    /*
+    /* TODO Para agregar cuando tengamos lo demás
     public AVLTree getBalanceAt(int index){
 
         if(index>=size || index<0)
@@ -86,6 +94,47 @@ public class TreeChain implements Serializable{
         return true;
     }
 
+    /**
+     *  Genera un hash mediante a la función especificada en el argumento alg en base al
+     *  indice, el nonce y el previous hash del objecto Block instanciado.
+     *  @param block el bloque en el que se va a generar el hash
+     *  @param alg  El algoritmo de hashing a usar
+     *  @throws NoSuchAlgorithmException
+     */
+    private void generateHash(Block block,String alg) throws NoSuchAlgorithmException {
+        MessageDigest md = MessageDigest.getInstance(alg);
+        String data = block.getIndex() + block.getPreviousHash() + block.getNonce();
+        md.update(data.getBytes());
+        byte[] digest = md.digest();
+        //convertir los bytes a formato hexa
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < digest.length; i++) {
+            sb.append(Integer.toString((digest[i] & 0xff) + 0x100, 16).substring(1));
+        }
+
+        block.setHash(sb.toString());
+    }
+
+    public void mine(Block block,String alg,int zeros) throws NoSuchAlgorithmException{
+        char[] hashChar = block.getHash().toCharArray();
+        while (!miningCondition(hashChar,zeros)){
+            block.incrementNonce();
+            generateHash(block,alg);
+            //System.out.println(hash);
+            hashChar = block.getHash().toCharArray();
+
+        }
+
+    }
+
+    private boolean miningCondition(char[] hash, int zeros){
+        for (int i=0; i<=zeros; i++){
+            if(hash[i]!=48) return false;
+        }
+        return true;
+    }
+
+
     public boolean lookup(int num){
         return getBalance().find(num);
     }
@@ -93,8 +142,14 @@ public class TreeChain implements Serializable{
     public int getSize(){
         return size;
     }
-
+    public Block getLast(){
+        return last;
+    }
     public void setZeroes(int zeroes){
+        this.zeroes = zeroes;
+    }
 
+    public int getZeroes(){
+        return zeroes;
     }
 }

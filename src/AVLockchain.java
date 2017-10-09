@@ -1,6 +1,7 @@
 import Blockchain.TreeChain;
 
 import java.io.*;
+import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
 
 /**
@@ -8,13 +9,13 @@ import java.util.Scanner;
  */
 public class AVLockchain {
 
-    public static void main(String args[]){
+    public static void main(String args[]) throws NoSuchAlgorithmException{
         TreeChain chain = loadChainFromFile("tree_chain.eda");
         if (chain == null){
-            chain = new TreeChain();
+            chain = new TreeChain(Integer.parseInt(args[1])); //TODO ver esto @Juan
             System.out.println("A new blockhain has been created.");
         }
-        chain.setZeroes(Integer.parseInt(args[1]));
+        //chain.setZeroes(Integer.parseInt(args[1]));
         System.out.println("Your tree looks like this: ");
         chain.getBalance().printTree();
 
@@ -29,7 +30,7 @@ public class AVLockchain {
         System.exit(0);
     }
 
-    public static void processInput(String input, TreeChain chain){
+    public static void processInput(String input, TreeChain chain) throws NoSuchAlgorithmException{
         System.out.println("Please enter a command below (enter \"exit\" to end the program):");
         if (input.contains("add")){
             if (chain.add(Integer.parseInt(input.split("add ")[1])))

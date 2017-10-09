@@ -22,7 +22,7 @@ public class LevelPriorityQueue {
     }
 
     public boolean isEmpty(int level){
-        //si esta vacio, eso quiere decir que ese nivel ya se imprimió del todo,
+        //si esta vacio, eso quiere decir que ese nivel ya se imprimió del t-odo,
         //por lo que se lo puede vaciar
         if(levels.get(level - 1).isEmpty()){
 
