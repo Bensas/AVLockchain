@@ -1,5 +1,6 @@
 package AVLTree;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class AVLTree {
@@ -152,29 +153,19 @@ public class AVLTree {
         if (root == null)
             return -1;
         ArrayList<Node> prefix = new ArrayList<>();
-        prefix.add(root);
-        Queue<Node> left = new LinkedList<>();
-        Deque<Node> right = new LinkedList<>();
-        if(root.left != null)
-            left.add(root.left);
-        if(root.right != null)
-            right.push(root.right);
-        Node aux;
-        while(!left.isEmpty() || !right.isEmpty()) {
-            if(left.isEmpty()){
-                aux = right.pop();
-                left.add(aux);
-            }
-            while(!left.isEmpty()){
-                aux=left.remove();
-                prefix.add(aux);
-                if(aux.left != null)
-                    left.add(aux.left);
-                if(aux.right != null)
-                    right.push(aux.right);
-            }
-        }
+        hashCode(prefix, root);
         return prefix.hashCode();
+    }
+
+    private void hashCode(ArrayList<Node> prefix, Node current) {
+        prefix.add(current);
+        if (current.left == null && current.right == null)
+            return;
+        if (current.left != null)
+            hashCode(prefix, current.left);
+        if (current.right != null)
+            hashCode(prefix, current.right);
+        return;
     }
 
 
@@ -202,7 +193,7 @@ public class AVLTree {
         }
 
         public int hashCode () {
-            return this.data;
+            return this.data * (getBalanceFactor() + 1);
         }
     }
 }
