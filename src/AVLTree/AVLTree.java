@@ -1,9 +1,10 @@
 package AVLTree;
 
+import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.*;
 
-public class AVLTree {
+public class AVLTree implements Serializable{
     public static  Node root;
     int size= 0;
     public AVLTree(){
@@ -128,9 +129,10 @@ public class AVLTree {
                     Node aux = s1.remove();
                     System.out.print(aux.data + " (");
                     if (aux.left != null) {
-                        System.out.print(aux.left.data + ", ");
+                        System.out.print(aux.left.data);
                         s2.add(aux.left);
                     }
+                    System.out.print(",");
                     if (aux.right != null) {
                         System.out.print(aux.right.data);
                         s2.add(aux.right);

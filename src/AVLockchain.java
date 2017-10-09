@@ -10,35 +10,52 @@ import java.util.Scanner;
 public class AVLockchain {
 
     public static void main(String args[]) throws NoSuchAlgorithmException{
+        int zeroes = 0;
+        if (args.length == 0 || !args[0].equals("zeroes")){
+            System.out.print("Please initialize the program with the parameter 'zeroes' followed by the number of zeroes hashes must start with. Exiting program.");
+            System.exit(1);
+        }
+        try{
+            zeroes = Integer.parseInt(args[1]); //TODO ver esto @Juan
+        } catch (Exception e){
+            System.out.print("The number of zeroes specified is not valid. Exiting program.");
+            System.exit(1);
+        }
+
         TreeChain chain = loadChainFromFile("tree_chain.eda");
         if (chain == null){
-            chain = new TreeChain(Integer.parseInt(args[1])); //TODO ver esto @Juan
+            chain = new TreeChain(zeroes);
             System.out.println("A new blockhain has been created.");
         }
-        //chain.setZeroes(Integer.parseInt(args[1]));
+        chain.setZeroes(zeroes);
+
         System.out.println("Your tree looks like this: ");
         chain.getBalance().printTree();
 
         Scanner scanner = new Scanner(System.in);
         String input;
-        System.out.println("Please enter a command below (enter \"exit\" to end the program):");
+        System.out.println("Please enter a command below (enter \"exit\" to end the program and save the chain):");
         while (!(input = scanner.nextLine()).equals("exit")){
-            processInput(input, chain);
+            try{
+                processInput(input, chain);
+                System.out.println("Please enter the next command below:");
+            } catch (NumberFormatException e){
+                System.out.println("Invalid element.");
+            }
         }
         saveChainToFile(chain, "tree_chain.eda");
         System.out.println("Exiting program. Bye!");
         System.exit(0);
     }
 
-    public static void processInput(String input, TreeChain chain) throws NoSuchAlgorithmException{
-        System.out.println("Please enter a command below (enter \"exit\" to end the program):");
+    public static void processInput(String input, TreeChain chain) throws NoSuchAlgorithmException, NumberFormatException{
         if (input.contains("add")){
             if (chain.add(Integer.parseInt(input.split("add ")[1])))
                 System.out.println(Integer.parseInt(input.split("add ")[1]) + " added successfully!");
             else
                 System.out.println("There was an error adding the element to the tree.");
         }
-        if (input.contains("remove")){
+        else if (input.contains("remove")){
             if (chain.remove(Integer.parseInt(input.split("remove ")[1])))
                 System.out.println(Integer.parseInt(input.split("remove ")[1]) + " removed successfully!");
             else
@@ -58,6 +75,9 @@ public class AVLockchain {
         }
         else if (input.contains("print")){
             chain.getBalance().printTree();
+        }
+        else {
+            System.out.println("The command is invalid.");
         }
     }
 
