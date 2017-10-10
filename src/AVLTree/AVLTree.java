@@ -265,7 +265,7 @@ public class AVLTree implements Serializable{
         int data;
         Node left;
         Node right;
-        int height;
+        int height= 0;
         ArrayList<Integer> modifierBlocks = new ArrayList<>();
 
         /**

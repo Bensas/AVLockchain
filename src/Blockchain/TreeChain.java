@@ -30,14 +30,13 @@ public class TreeChain implements Serializable{
         else
             operation= "!add";
 
-        //esto es porque en el momento me parece mejor guardar un hash que un árbol.
         last = new Block(last, last==null?FIRSTHASH:last.getHash(), operation, balance.hashCode());
         generateHash(last,ENCFUNCTION); //Después de crear el bloque debe generar el hash
         size++;
         return result;
     }
 
-    public boolean remove(int element){
+    public boolean remove(int element) throws NoSuchAlgorithmException{
         boolean result = balance.remove();
         String operation;
         if(result) {
@@ -46,13 +45,9 @@ public class TreeChain implements Serializable{
         else
             operation="!rmv";
 
-        last= new Block(last, last.getHash(), operation, balance.hashCode());
+        last= new Block(last, last==null?FIRSTHASH:last.getHash(), operation, balance.hashCode());
         size++;
         return result;
-    }
-
-    public AVLTree getBalance() {
-        return balance;
     }
 
     /* TODO Para agregar cuando tengamos lo demás
@@ -135,7 +130,9 @@ public class TreeChain implements Serializable{
         return true;
     }
 
-
+    public AVLTree getBalance() {
+        return balance;
+    }
     public boolean lookup(int num){
         return getBalance().find(num);
     }
@@ -153,4 +150,5 @@ public class TreeChain implements Serializable{
     public int getZeroes(){
         return zeroes;
     }
+
 }
