@@ -16,7 +16,7 @@ public class AVLockchain {
             System.exit(1);
         }
         try{
-            zeroes = Integer.parseInt(args[1]); //TODO ver esto @Juan
+            zeroes = Integer.parseInt(args[1]);
         } catch (Exception e){
             System.out.print("The number of zeroes specified is not valid. Exiting program.");
             System.exit(1);
@@ -27,7 +27,9 @@ public class AVLockchain {
             chain = new TreeChain(zeroes);
             System.out.println("A new blockhain has been created.");
         }
-        chain.setZeroes(zeroes);
+        System.out.println(chain.getSize());
+
+        //chain.setZeroes(zeroes);
 
         System.out.println("Your tree looks like this: ");
         chain.getBalance().printTree();
@@ -83,12 +85,12 @@ public class AVLockchain {
 
     public static TreeChain loadChainFromFile(String fileName){
         TreeChain chain = null;
-        FileInputStream fin;
-        ObjectInputStream objectinputstream;
+        FileInputStream fin = null;
+        ObjectInputStream oin = null;
         try {
             fin = new FileInputStream(fileName);
-            objectinputstream = new ObjectInputStream(fin);
-            chain = (TreeChain) objectinputstream.readObject();
+            oin = new ObjectInputStream(fin);
+            chain = (TreeChain) oin.readObject();
             System.out.println("The blockchain was loaded successfully.");
         } catch (FileNotFoundException e){
             System.out.println("No blockchain file found.");

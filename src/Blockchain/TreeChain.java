@@ -12,12 +12,13 @@ public class TreeChain implements Serializable{
     //  indique el árbol vacío sería erróneo puesto que ninguna transacción (operación sobre el árbol) fue
     //  realizada aun.
     private Block last= null;
-    private AVLTree balance= new AVLTree();
+    private AVLTree balance;
     private int size = 0;
     private int zeroes;
 
     public TreeChain(int zeroes){
         this.zeroes = zeroes;
+        if (balance == null) balance = new AVLTree();
     }
 
     public boolean add(int element) throws NoSuchAlgorithmException{

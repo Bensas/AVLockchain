@@ -5,7 +5,7 @@ import java.lang.reflect.Array;
 import java.util.*;
 
 public class AVLTree implements Serializable{
-    public static  Node root;
+    public Node root;
     int size= 0;
     public AVLTree(){
         root = null;
@@ -141,6 +141,9 @@ public class AVLTree implements Serializable{
                 }
             }
         }
+        else{
+            System.out.println("WUBBA LUBBA DUB DUB BIATCH"); //TODO: DELET DIS
+        }
     }
 
 
@@ -171,7 +174,7 @@ public class AVLTree implements Serializable{
     }
 
 
-    private static class Node {
+    private static class Node implements Serializable{
         int data;
         Node left;
         Node right;

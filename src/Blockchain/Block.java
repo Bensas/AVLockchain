@@ -16,7 +16,7 @@ import java.security.NoSuchAlgorithmException;
      */
     public class Block implements Serializable{
         private int index;
-        private int tree;
+        private int treeHash;
         private Block prevBlock;
         private String operation;
         private int nonce;
@@ -24,10 +24,11 @@ import java.security.NoSuchAlgorithmException;
         private String previousHash;
 
         public Block(Block prevBlock, String previousHash, String operation, int tree){
-            this.index= (prevBlock == null?0:prevBlock.getIndex());
+            this.index= (prevBlock == null?0:prevBlock.getIndex() + 1);
+            this.treeHash = tree;
+            this.prevBlock = prevBlock;
             this.previousHash = previousHash;
             this.operation = operation;
-            this.tree = tree;
             this.nonce= 0;
         }
 
@@ -42,8 +43,8 @@ import java.security.NoSuchAlgorithmException;
             return index;
         }
 
-        public int getTree(){
-            return tree;
+        public int getTreeHash(){
+            return treeHash;
         }
 
         public String getOperation(){
