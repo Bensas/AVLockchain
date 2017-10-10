@@ -38,7 +38,7 @@ public class TreeChainTest {
     }
 
     @Test
-    public void removeEmptyChainReturnsFalse(){
+    public void removeEmptyChainReturnsFalse() throws NoSuchAlgorithmException{
         assertFalse(chain1.remove(2));
     }
 

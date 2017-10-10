@@ -40,7 +40,6 @@ public class TreeChain implements Serializable {
         else
             operation = "!add";
 
-        //esto es porque en el momento me parece mejor guardar un hash que un árbol.
         last = new Block(last, last == null ? FIRSTHASH : last.getHash(), operation, balance.hashCode());
         generateHash(last, ENCFUNCTION); //Después de crear el bloque debe generar el hash
         size++;
@@ -51,7 +50,7 @@ public class TreeChain implements Serializable {
      * @param element that is going to be removed.
      * @return true if it was succesfully removed from the tree, or false if there wasn't such element in the tree.
      */
-    public boolean remove(int element){
+    public boolean remove(int element) throws NoSuchAlgorithmException{
         boolean result = balance.remove();
         String operation;
         if(result) {
@@ -60,7 +59,7 @@ public class TreeChain implements Serializable {
         else
             operation="!rmv";
 
-        last= new Block(last, last.getHash(), operation, balance.hashCode());
+        last= new Block(last, last == null ? FIRSTHASH : last.getHash(), operation, balance.hashCode());
         size++;
         return result;
     }
@@ -171,7 +170,6 @@ public class TreeChain implements Serializable {
         return true;
     }
 
-
     public boolean lookup(int num){
         return getBalance().find(num);
     }
@@ -199,4 +197,5 @@ public class TreeChain implements Serializable {
     public int getZeroes(){
         return zeroes;
     }
+
 }

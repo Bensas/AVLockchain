@@ -233,29 +233,28 @@ public class AVLTree implements Serializable{
      * @return AVL tree prefix hash code.
      */
     public int hashCode(){
-        if (root == null)
-            return -1;
-        ArrayList<Node> prefix = new ArrayList<>();
-        hashCode(prefix, root);
-        return prefix.hashCode();
+        if(root == null)
+            return 0;
+        else
+            return hashCode(1, root);
     }
 
     /**
      *
      * HashCode's recursive wrapper function.
      *
-     * @param prefix arrayList with prefix values.
+     * @param currentHash the sum of all previous prefix values multiplied by 31.
      * @param current Node.
      */
-    private void hashCode(ArrayList<Node> prefix, Node current) {
-        prefix.add(current);
-        if (current.left == null && current.right == null)
-            return;
-        if (current.left != null)
-            hashCode(prefix, current.left);
-        if (current.right != null)
-            hashCode(prefix, current.right);
-        return;
+    private int hashCode(int currentHash, Node current){
+
+        if(current == null)
+            return currentHash;
+
+        currentHash= 31*currentHash + current.hashCode();
+        currentHash= hashCode(currentHash, current.left);
+        currentHash= hashCode(currentHash, current.right);
+        return currentHash;
     }
 
 
@@ -266,7 +265,7 @@ public class AVLTree implements Serializable{
         int data;
         Node left;
         Node right;
-        int height;
+        int height= 0;
         ArrayList<Integer> modifierBlocks = new ArrayList<>();
 
         /**
@@ -304,7 +303,7 @@ public class AVLTree implements Serializable{
          * @return Node's hash code.
          */
         public int hashCode () {
-            return this.data + getBalanceFactor() + 1;
+            return this.data +37*(getBalanceFactor() + 2);
         }
     }
 }
