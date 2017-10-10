@@ -5,38 +5,52 @@ import java.io.Serializable;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class TreeChain implements Serializable{
-    private static final String FIRSTHASH="00000000000000000000000000000000";
+public class TreeChain implements Serializable {
+    private static final String FIRSTHASH = "00000000000000000000000000000000";
     public static final String ENCFUNCTION = "MD5";
     //  puesto que los bloques contienen transacciones, el primer bloque debe ser null. Poner un bloque que
     //  indique el árbol vacío sería erróneo puesto que ninguna transacción (operación sobre el árbol) fue
     //  realizada aun.
-    private Block last= null;
+    private Block last = null;
     private AVLTree balance;
     private int size = 0;
     private int zeroes;
 
-    public TreeChain(int zeroes){
+    /**
+     * TreeChain's Constructor, simulating a Blockchain.
+     *
+     * @param zeroes amount of zeros wanted in the hash.
+     */
+    public TreeChain(int zeroes) {
         this.zeroes = zeroes;
         if (balance == null) balance = new AVLTree();
     }
 
-    public boolean add(int element) throws NoSuchAlgorithmException{
-        boolean result = balance.add(element,size);
+    /**
+     * @param element wanted to be added in the avl tree.
+     * @return true if the element was added to the AVL tree. False otherwise.
+     * @throws NoSuchAlgorithmException
+     */
+    public boolean add(int element) throws NoSuchAlgorithmException {
+        boolean result = balance.add(element, size);
 
         String operation;
-        if(result)
-            operation= "add";
+        if (result)
+            operation = "add";
         else
-            operation= "!add";
+            operation = "!add";
 
         //esto es porque en el momento me parece mejor guardar un hash que un árbol.
-        last = new Block(last, last==null?FIRSTHASH:last.getHash(), operation, balance.hashCode());
-        generateHash(last,ENCFUNCTION); //Después de crear el bloque debe generar el hash
+        last = new Block(last, last == null ? FIRSTHASH : last.getHash(), operation, balance.hashCode());
+        generateHash(last, ENCFUNCTION); //Después de crear el bloque debe generar el hash
         size++;
         return result;
     }
 
+    /**
+     * @param element that is going to be removed.
+     * @return true if it was succesfully removed from the tree, or false if there wasn't such element in the tree.
+     */
     public boolean remove(int element){
         boolean result = balance.remove();
         String operation;
@@ -51,6 +65,10 @@ public class TreeChain implements Serializable{
         return result;
     }
 
+    /**
+     *
+     * @return current tree balance.
+     */
     public AVLTree getBalance() {
         return balance;
     }
@@ -79,6 +97,10 @@ public class TreeChain implements Serializable{
     }
     */
 
+    /**
+     *
+     * @return true if the blockchain is validated or false otherwise.
+     */
     public boolean validate(){
 
         if(last==null)
@@ -116,6 +138,14 @@ public class TreeChain implements Serializable{
         block.setHash(sb.toString());
     }
 
+    /**
+     * Mine by brute force to get the hash of the block.
+     *
+     * @param block wanted to be mined
+     * @param alg the algorithm saved in the block
+     * @param zeros amount of zeros wanted in the hash
+     * @throws NoSuchAlgorithmException
+     */
     public void mine(Block block,String alg,int zeros) throws NoSuchAlgorithmException{
         char[] hashChar = block.getHash().toCharArray();
         while (!miningCondition(hashChar,zeros)){
@@ -128,6 +158,12 @@ public class TreeChain implements Serializable{
 
     }
 
+    /**
+     *
+     * @param hash that is gonna be checked.
+     * @param zeros amount of zeros wanted.
+     * @return true if the hash has in teh beginning the amount of zeros wanted. False otherwise.
+     */
     private boolean miningCondition(char[] hash, int zeros){
         for (int i=0; i<=zeros; i++){
             if(hash[i]!=48) return false;
@@ -143,13 +179,23 @@ public class TreeChain implements Serializable{
     public int getSize(){
         return size;
     }
+
     public Block getLast(){
         return last;
     }
+
+    /**
+     *
+     * @param zeroes amount wanted to be changed.
+     */
     public void setZeroes(int zeroes){
         this.zeroes = zeroes;
     }
 
+    /**
+     *
+     * @return the amount of zeros wanted.
+     */
     public int getZeroes(){
         return zeroes;
     }

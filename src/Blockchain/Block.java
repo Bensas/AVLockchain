@@ -23,6 +23,15 @@ import java.security.NoSuchAlgorithmException;
         private String hash;
         private String previousHash;
 
+        /**
+         *
+         * Block's Constructor
+         *
+         * @param prevBlock previous Block in the BlockChain.
+         * @param previousHash previous Block hash.
+         * @param operation wanted to be saved in this Block.
+         * @param tree avl tree hash.
+         */
         public Block(Block prevBlock, String previousHash, String operation, int tree){
             this.index= (prevBlock == null?0:prevBlock.getIndex() + 1);
             this.treeHash = tree;
@@ -35,36 +44,67 @@ import java.security.NoSuchAlgorithmException;
 
         //getters and setters
 
+        /**
+         *
+         * @return current nonce value.
+         */
         public int getNonce(){
             return nonce;
         }
 
+        /**
+         *
+         * @return current index value.
+         */
         public int getIndex(){
             return index;
         }
 
+        /**
+         *
+         * @return current treeHash value.
+         */
         public int getTreeHash(){
             return treeHash;
         }
 
+        /**
+         *
+         * @return current operation.
+         */
         public String getOperation(){
             return operation;
         }
 
+        /**
+         *
+         * @return previous Block.
+         */
         public Block getPrevBlock(){
             return prevBlock;
         }
 
+        /**
+         *
+         * @param hash to set.
+         */
         public void setHash(String hash){
             this.hash=hash;
         }
 
+        /**
+         * Increments nonce value by 1.
+         */
         public void incrementNonce(){
             nonce+=1;
         }
         //getter agregado por josé, se necesita un getter del hash para cuando creas un bloque
         //nuevo para pasar como previousHash
 
+        /**
+         *
+         * @return current hash.
+         */
         public String getHash() {
             return hash;
         }
@@ -72,6 +112,11 @@ import java.security.NoSuchAlgorithmException;
         //getter agregado por José, se necesita un getter del previous hash para checkear si es válida
         //la cadena. Aunque, si uno lo quiere pensar desde el punto de vista objetoso, puede ser mejor que
         //sean los bloques en si los que se fijan si ellos mismos son válidos. Cosas para debatirse.
+
+        /**
+         *
+         * @return previous hash.
+         */
         public String getPreviousHash() {
             return previousHash;
         }
