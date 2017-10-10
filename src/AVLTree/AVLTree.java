@@ -4,13 +4,28 @@ import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ *
+ * AVL Tree class with its basic functions
+ * Node class is defined inside it.
+ *
+ */
 public class AVLTree implements Serializable{
     public Node root;
     int size= 0;
+
+    /**
+     * Constructor of the class that only initialize root.
+     */
     public AVLTree(){
         root = null;
     }
 
+    /**
+     *
+     * @param id id to search in the avl tree.
+     * @return true if the avl tree contains the id or false otherwise.
+     */
     public boolean find(int id){
         Node current = root;
         while(current!=null){
@@ -25,16 +40,33 @@ public class AVLTree implements Serializable{
         return false;
     }
 
+    /**
+     *
+     * @param n Node which you want to know its height.
+     * @return node's height if its not null. Otherwise it returns -1.
+     */
     public int height (Node n){
         return n == null ? -1 : n.height;
     }
 
+    /**
+     *
+     * @param a first value.
+     * @param b second value.
+     * @return which value is higher.
+     */
     public int max (int a, int b){
         if (a > b)
             return a;
         return b;
     }
 
+    /**
+     *
+     * @param data wanted to add in the avl tree.
+     * @param modifierBlock which block is making the modification.
+     * @return if the data was successfully added by checking avl size.
+     */
     public boolean add (int data, int modifierBlock){
         int previousSize= size;
         root = add (data, root, new AtomicBoolean(false), modifierBlock);
@@ -43,6 +75,16 @@ public class AVLTree implements Serializable{
         return false;
     }
 
+    /**
+     *
+     * Wrapper's recursive add. If the tree gets unbalanced when the insertion is made, then a rotation ocurrs.
+     *
+     * @param data wanted to be added.
+     * @param current Node.
+     * @param modified if it has been a modification.
+     * @param modifierBlock which block is making the modification.
+     * @return a Node that should be the child of the previous recursive call.
+     */
     private Node add (int data, Node current, AtomicBoolean modified, int modifierBlock){
 
         if (current == null) {
@@ -79,40 +121,72 @@ public class AVLTree implements Serializable{
         return current;
     }
 
-    private Node rotateWithLeftChild(Node k2){
-        Node k1 = k2.left;
+    /**
+     *
+     * Left rotation.
+     *
+     * @param unbalanced Node unbalanced that is gonna be rotated.
+     * @return upper Node in the new rotation.
+     */
+    private Node rotateWithLeftChild(Node unbalanced){
+        Node aux = unbalanced.left;
 
-        k2.left = k1.right;
-        k1.right = k2;
+        unbalanced.left = aux.right;
+        aux.right = unbalanced;
 
-        k2.height = max(height(k2.left), height(k2.right)) + 1;
-        k1.height = max(height(k1.left), k2.height) + 1;
+        unbalanced.height = max(height(unbalanced.left), height(unbalanced.right)) + 1;
+        aux.height = max(height(aux.left), unbalanced.height) + 1;
 
-        return (k1);
+        return aux;
     }
 
-    private Node doubleWithLeftChild(Node k3){
-        k3.left = rotateWithRightChild(k3.left);
-        return rotateWithLeftChild(k3);
+    /**
+     *
+     * LeftLeft rotation.
+     *
+     * @param unbalanced Node unbalanced that is gonna be rotated.
+     * @return upper Node in the new rotation.
+     */
+    private Node doubleWithLeftChild(Node unbalanced){
+        unbalanced.left = rotateWithRightChild(unbalanced.left);
+        return rotateWithLeftChild(unbalanced);
     }
 
-    private Node rotateWithRightChild(Node k1){
-        Node k2 = k1.right;
+    /**
+     *
+     * Right rotation.
+     *
+     * @param unbalanced Node unbalanced that is gonna be rotated.
+     * @return upper Node in the new rotation.
+     */
+    private Node rotateWithRightChild(Node unbalanced){
+        Node aux = unbalanced.right;
 
-        k1.right = k2.left;
-        k2.left = k1;
+        unbalanced.right = aux.left;
+        aux.left = unbalanced;
 
-        k1.height = max(height(k1.left), height(k1.right)) + 1;
-        k2.height = max(height(k2.right), k1.height) + 1;
+        unbalanced.height = max(height(unbalanced.left), height(unbalanced.right)) + 1;
+        aux.height = max(height(aux.right), unbalanced.height) + 1;
 
-        return (k2);
+        return (aux);
     }
 
-    private Node doubleWithRightChild(Node k1){
-        k1.right = rotateWithLeftChild(k1.right);
-        return rotateWithRightChild(k1);
+    /**
+     *
+     * RightRight rotation.
+     *
+     * @param unbalanced Node unbalanced that is gonna be rotated.
+     * @return upper Node in the new rotation.
+     */
+    private Node doubleWithRightChild(Node unbalanced){
+        unbalanced.right = rotateWithLeftChild(unbalanced.right);
+        return rotateWithRightChild(unbalanced);
     }
 
+    /**
+     *
+     * Prints the tree separating by levels, and adding Node's child data values.
+     */
     public void printTree(){
         if (root != null) {
             Queue<Node> s1 = new LinkedList<>();
@@ -154,6 +228,10 @@ public class AVLTree implements Serializable{
         return true;
     }
 
+    /**
+     *
+     * @return AVL tree prefix hash code.
+     */
     public int hashCode(){
         if (root == null)
             return -1;
@@ -162,6 +240,13 @@ public class AVLTree implements Serializable{
         return prefix.hashCode();
     }
 
+    /**
+     *
+     * HashCode's recursive wrapper function.
+     *
+     * @param prefix arrayList with prefix values.
+     * @param current Node.
+     */
     private void hashCode(ArrayList<Node> prefix, Node current) {
         prefix.add(current);
         if (current.left == null && current.right == null)
@@ -174,6 +259,9 @@ public class AVLTree implements Serializable{
     }
 
 
+    /**
+     * Node class for the AVL tree.
+     */
     private static class Node implements Serializable{
         int data;
         Node left;
@@ -181,22 +269,40 @@ public class AVLTree implements Serializable{
         int height;
         ArrayList<Integer> modifierBlocks = new ArrayList<>();
 
+        /**
+         *
+         * @param data of the Node.
+         */
         public Node(int data) {
             this.data = data;
             left = null;
             right = null;
             }
 
+        /**
+         *
+         * @param data of the Node.
+         * @param left Node.
+         * @param right Node.
+         */
         public Node(int data, Node left, Node right){
             this.data = data;
             this.left = left;
             this.right = right;
             }
 
+        /**
+         *
+         * @return Node's balance factor.
+         */
         public int getBalanceFactor(){
             return (left == null?0:left.height) - (right == null? 0:right.height);
         }
 
+        /**
+         *
+         * @return Node's hash code.
+         */
         public int hashCode () {
             return this.data + getBalanceFactor() + 1;
         }
