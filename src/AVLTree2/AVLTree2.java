@@ -48,6 +48,10 @@ public class AVLTree2<T> {
             return null;
         }
         if(current.elem.equals(elem)){
+            if(current.left == null){
+                size--;
+                return current.right;
+            }
             Node<T> aux = getMinNode(current.right);
             if(aux == null){
                 size--;
@@ -70,6 +74,10 @@ public class AVLTree2<T> {
         if(n == null) return null;
         if(n.left == null) return n;
         return getMinNode(n.left);
+    }
+
+    public int size(){
+        return size;
     }
 
     public void printTree(){

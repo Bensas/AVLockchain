@@ -31,7 +31,6 @@ public class AVLTree2Test
         bt.add(14);
         bt.add(13);
         bt.add(9);
-        bt.add(-1);
         bt.printTree();
 
     }
@@ -58,15 +57,17 @@ public class AVLTree2Test
 
     @Test
     public void removeExistingElementReturnTrue(){
+        System.out.println("size = " + bt.size());
         assertTrue(bt.remove(12));
-        System.out.println("");
+        System.out.println("size = " + bt.size());
         bt.printTree();
     }
 
     @Test
     public void removeRootReturnTrue(){
+        System.out.println("size = " + bt.size());
         assertTrue(bt.remove(1));
-        System.out.println("");
+        System.out.println("size = " + bt.size());
         bt.printTree();
     }
 
