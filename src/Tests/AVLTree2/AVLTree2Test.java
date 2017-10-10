@@ -24,14 +24,32 @@ public class AVLTree2Test
     public void Before(){
         bt = new AVLTree2<Integer>(new MyIntComparator());
         bt.add(1);
+        bt.printTree();
+        System.out.println();
         bt.add(10);
+        bt.printTree();
+        System.out.println();
         bt.add(15);
+        bt.printTree();
+        System.out.println("balance Factor: " + bt.balanceFactor());
+        System.out.println();
         bt.add(16);
+        bt.printTree();
+        System.out.println();
         bt.add(12);
+        bt.printTree();
+        System.out.println();
         bt.add(14);
+        bt.printTree();
+        System.out.println();
         bt.add(13);
+        bt.printTree();
+        System.out.println();
         bt.add(9);
         bt.printTree();
+        System.out.println("balance Factor: " + bt.balanceFactor());
+        System.out.println("height : " + bt.height());
+        System.out.println("TERMINO EL BEFORE");
 
     }
 
@@ -53,6 +71,9 @@ public class AVLTree2Test
     @Test
     public void removeNonExistingElementReturnFalse(){
         assertFalse(bt.remove(25));
+        System.out.println("balance Factor: " + bt.balanceFactor());
+        System.out.println("height : " + bt.height());
+
     }
 
     @Test
@@ -61,6 +82,8 @@ public class AVLTree2Test
         assertTrue(bt.remove(12));
         System.out.println("size = " + bt.size());
         bt.printTree();
+        System.out.println("balance Factor: " + bt.balanceFactor());
+        System.out.println("height : " + bt.height());
     }
 
     @Test
@@ -69,7 +92,12 @@ public class AVLTree2Test
         assertTrue(bt.remove(1));
         System.out.println("size = " + bt.size());
         bt.printTree();
+        System.out.println("balance Factor: " + bt.balanceFactor());
+        System.out.println("height : " + bt.height());
+
     }
+
+
 
 
 }

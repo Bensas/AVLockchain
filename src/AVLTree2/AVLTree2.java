@@ -30,10 +30,39 @@ public class AVLTree2<T> {
         }
         if(cmp.compare(current.elem,elem) > 0){
             current.left = addR(elem,current.left);
+            current.updateBalanceFactor();
+            current = balanceLeft(current,elem);
         } else if(cmp.compare(current.elem,elem) < 0){
             current.right = addR(elem,current.right);
+            current.updateBalanceFactor();
+            current = balanceRight(current,elem);
         }
+
+        current.height = Integer.max((current.left!=null?current.left.height:0),(current.right!=null?current.right.height:0)) + 1;
         return current;
+    }
+
+    private Node<T> balanceLeft(Node<T> n,T elem){
+        if(n.balanceFactor == 2){
+            if (cmp.compare(n.left.elem,elem) > 0){
+                n = rotateWithLeftChild(n);
+            }
+            else {
+                n = doubleWithLeftChild(n);
+            }
+        }
+        return n;
+    }
+
+    private Node<T> balanceRight(Node<T> n,T elem){
+        if (n.balanceFactor == -2)
+            if (cmp.compare(elem,n.right.elem) > 0){
+                n = rotateWithRightChild(n);
+            }
+            else{
+                n = doubleWithRightChild(n);
+            }
+            return n;
     }
 
     public boolean remove(T elem){
@@ -47,28 +76,104 @@ public class AVLTree2<T> {
         if(current == null){
             return null;
         }
-        if(current.elem.equals(elem)){
-            if(current.left == null){
-                size--;
-                return current.right;
-            }
-            Node<T> aux = getMinNode(current.right);
-            if(aux == null){
-                size--;
-                return current.left;
-            }
-            Node<T> ret = new Node<T>(aux.elem,current.right,current.left);
-            ret.right = removeR(ret.elem,ret.right);
-            return ret;
-        }
+        /*  si es menor*/
         if(cmp.compare(current.elem,elem) > 0){
             current.left = removeR(elem,current.left);
+            current.updateBalanceFactor();
             return current;
         }
-        current.right = removeR(elem,current.right);
-        return current;
+
+        /*  si es mayor*/
+        if(cmp.compare(current.elem,elem) < 0){
+            current.right = removeR(elem,current.right);
+            current.updateBalanceFactor();
+            return current;
+        }
+
+        /*  si es igual*/
+        if(current.left == null){
+            size--;
+            return current.right;
+        }
+        Node<T> aux = getMinNode(current.right);
+        if(aux == null){
+            size--;
+            return current.left;
+        }
+        Node<T> ret = new Node<T>(aux.elem,current.right,current.left);
+        ret.right = removeR(ret.elem,ret.right);
+        return ret;
     }
 
+    /**
+     *
+     * Left rotation.
+     *
+     * @param unbalanced Node unbalanced that is gonna be rotated.
+     * @return upper Node in the new rotation.
+     */
+    private Node<T> rotateWithLeftChild(Node<T> unbalanced){
+        Node<T> aux = unbalanced.left;
+
+        unbalanced.left = aux.right;
+        aux.right = unbalanced;
+
+        unbalanced.height = Integer.max((unbalanced.left!=null?unbalanced.left.height:0),(unbalanced.right!=null?unbalanced.right.height:0)) + 1;
+        aux.height = Integer.max(aux.left!=null?aux.left.height:0,aux.right.height) + 1;
+
+        return aux;
+    }
+
+    /**
+     *
+     * LeftLeft rotation.
+     *
+     * @param unbalanced Node unbalanced that is gonna be rotated.
+     * @return upper Node in the new rotation.
+     */
+    private Node<T> doubleWithLeftChild(Node<T> unbalanced){
+        unbalanced.left = rotateWithRightChild(unbalanced.left);
+        return rotateWithLeftChild(unbalanced);
+    }
+
+    /**
+     *
+     * Right rotation.
+     *
+     * @param unbalanced Node unbalanced that is gonna be rotated.
+     * @return upper Node in the new rotation.
+     */
+    private Node<T> rotateWithRightChild(Node<T> unbalanced){
+        Node<T> aux = unbalanced.right;
+
+        unbalanced.right = aux.left;
+        aux.left = unbalanced;
+
+        unbalanced.height = Integer.max((unbalanced.left!=null?unbalanced.left.height:0),(unbalanced.right!=null?unbalanced.right.height:0)) + 1;
+        aux.height = Integer.max(aux.left.height,aux.right!=null?aux.right.height:0) + 1;
+
+        return aux;
+    }
+
+    /**
+     *
+     * RightRight rotation.
+     *
+     * @param unbalanced Node unbalanced that is gonna be rotated.
+     * @return upper Node in the new rotation.
+     */
+    private Node<T> doubleWithRightChild(Node<T> unbalanced){
+        unbalanced.right = rotateWithLeftChild(unbalanced.right);
+        return rotateWithRightChild(unbalanced);
+    }
+
+    public int height(){
+        return head.height;
+    }
+
+    public int balanceFactor(){
+        return head.balanceFactor;
+    }
 
     private Node<T> getMinNode(Node<T> n){
         if(n == null) return null;
@@ -115,18 +220,28 @@ public class AVLTree2<T> {
         Node<T> left;
         Node<T> right;
         int balanceFactor;
+        int height;
 
         Node(T elem,Node<T> right,Node<T> left){
           this.elem = elem;
           this.right = right;
           this.left = left;
-          balanceFactor = left.balanceFactor - right.balanceFactor;
+          updateBalanceFactor();
         }
 
         Node(T elem){
             this.elem = elem;
             left = right = null;
             balanceFactor = 0;
+            height = 1;
         }
+
+            void updateBalanceFactor(){
+            balanceFactor = (left!=null?left.height:0) - (right!=null?right.height:0);
+        }
+
+            public int hashCode () {
+                return this.elem.hashCode() * (balanceFactor + 2);
+            }
     }
 }
