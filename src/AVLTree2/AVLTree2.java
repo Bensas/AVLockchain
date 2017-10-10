@@ -78,15 +78,25 @@ public class AVLTree2<T> {
         }
         /*  si es menor*/
         if(cmp.compare(current.elem,elem) > 0){
+            int prevSize = size;
             current.left = removeR(elem,current.left);
-            current.updateBalanceFactor();
+            if(size < prevSize){
+                current.height = Integer.max((current.left!=null?current.left.height:0),(current.right!=null?current.right.height:0)) + 1;
+                current.updateBalanceFactor();
+                if((current.balanceFactor > 1) || (current.balanceFactor < -1))  current = rotateWithRightChild(current);
+            }
             return current;
         }
 
         /*  si es mayor*/
         if(cmp.compare(current.elem,elem) < 0){
+            int prevSize = size;
             current.right = removeR(elem,current.right);
-            current.updateBalanceFactor();
+            if(size < prevSize){
+                current.height = Integer.max((current.left!=null?current.left.height:0),(current.right!=null?current.right.height:0)) + 1;
+                current.updateBalanceFactor();
+                if((current.balanceFactor > 1) || (current.balanceFactor < -1))  current = rotateWithLeftChild(current);
+            }
             return current;
         }
 
@@ -102,10 +112,12 @@ public class AVLTree2<T> {
         }
         Node<T> ret = new Node<T>(aux.elem,current.right,current.left);
         ret.right = removeR(ret.elem,ret.right);
-        return ret;
-    }
+        ret.height = Integer.max((ret.left!=null?ret.left.height:0),(ret.right!=null?ret.right.height:0)) + 1;
 
-    /**
+        return ret;
+     }
+
+     /**
      *
      * Left rotation.
      *
