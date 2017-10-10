@@ -236,7 +236,7 @@ public class AVLTree implements Serializable{
         if(root == null)
             return 0;
         else
-            return hashCode(0, root);
+            return hashCode(1, root);
     }
 
     /**
