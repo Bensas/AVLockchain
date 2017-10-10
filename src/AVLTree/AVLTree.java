@@ -3,6 +3,7 @@ package AVLTree;
 import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class AVLTree implements Serializable{
     public Node root;
@@ -37,17 +38,17 @@ public class AVLTree implements Serializable{
 
     public boolean add (int data, int modifierBlock){
         int previousSize= size;
-        root = add (data, root, false, modifierBlock);
+        root = add (data, root, new AtomicBoolean(false), modifierBlock);
         if(size > previousSize)
             return true;
         return false;
     }
 
-    private Node add (int data, Node current, Boolean modified, int modifierBlock){
+    private Node add (int data, Node current, AtomicBoolean modified, int modifierBlock){
 
         if (current == null) {
             current = new Node(data);
-            modified= true;
+            modified.set(true);
             current.modifierBlocks.add(modifierBlock);
             size++;
         }
@@ -73,7 +74,7 @@ public class AVLTree implements Serializable{
                     current = doubleWithRightChild(current);
                 }
         }
-        if(modified)
+        if(modified.get())
             current.modifierBlocks.add(modifierBlock);
         current.height = max(height(current.left), height(current.right)) + 1;
         return current;
@@ -198,7 +199,7 @@ public class AVLTree implements Serializable{
         }
 
         public int hashCode () {
-            return this.data * (getBalanceFactor() + 1);
+            return this.data + getBalanceFactor() + 1;
         }
     }
 }
