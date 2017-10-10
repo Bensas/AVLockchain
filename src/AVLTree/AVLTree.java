@@ -251,7 +251,7 @@ public class AVLTree implements Serializable{
         if(current == null)
             return currentHash;
 
-        currentHash= 31*current.data*(2 + current.getBalanceFactor());
+        currentHash= 31*currentHash + current.hashCode();
         currentHash= hashCode(currentHash, current.left);
         currentHash= hashCode(currentHash, current.right);
         return currentHash;
@@ -296,6 +296,14 @@ public class AVLTree implements Serializable{
          */
         public int getBalanceFactor(){
             return (left == null?0:left.height) - (right == null? 0:right.height);
+        }
+
+        /**
+         *
+         * @return Node's hash code.
+         */
+        public int hashCode () {
+            return this.data +37*(getBalanceFactor() + 2);
         }
     }
 }
