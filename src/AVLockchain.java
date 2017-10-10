@@ -4,9 +4,6 @@ import java.io.*;
 import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
 
-/**
- * Created by Bensas on 10/7/17.
- */
 public class AVLockchain {
 
     public static void main(String args[]) throws NoSuchAlgorithmException{
