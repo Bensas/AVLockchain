@@ -1,8 +1,10 @@
 package AVLTree2;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class AVLTree2<T> {
 
@@ -16,33 +18,42 @@ public class AVLTree2<T> {
         this.cmp = cmp;
     }
 
-    public boolean add(T elem){
+    public boolean add(T elem,int blockId){
         if(elem == null) return false;
         int prevSize = size;
-        head = addR(elem,head);
+        head = addR(elem,head,blockId,new AtomicBoolean(false));
         return size > prevSize;
     }
 
-    private Node<T> addR(T elem,Node<T> current){
+    private Node<T> addR(T elem, Node<T> current, int blockId, AtomicBoolean wasModified){
         if(current == null){
             size++;
-            return new Node<>(elem);
+            current = new Node<T>(elem);
+            current.modifiersByAdding.add(blockId);
+            wasModified.set(true);
+            return current;
         }
         if(cmp.compare(current.elem,elem) > 0){
-            current.left = addR(elem,current.left);
+            current.left = addR(elem,current.left,blockId,wasModified);
             current.updateBalanceFactor();
             current = balanceLeft(current,elem);
         } else if(cmp.compare(current.elem,elem) < 0){
-            current.right = addR(elem,current.right);
+            current.right = addR(elem,current.right,blockId,wasModified);
             current.updateBalanceFactor();
             current = balanceRight(current,elem);
         }
 
-        current.height = Integer.max((current.left!=null?current.left.height:0),(current.right!=null?current.right.height:0)) + 1;
+        if(wasModified.get()){
+            current.modifiersByAdding.add(blockId);
+        }
+
+        current.updateHeight();
         return current;
     }
 
     private Node<T> balanceLeft(Node<T> n,T elem){
+        n.updateHeight();
+        n.updateBalanceFactor();
         if(n.balanceFactor == 2){
             if (cmp.compare(n.left.elem,elem) > 0){
                 n = rotateWithLeftChild(n);
@@ -55,6 +66,8 @@ public class AVLTree2<T> {
     }
 
     private Node<T> balanceRight(Node<T> n,T elem){
+        n.updateHeight();
+        n.updateBalanceFactor();
         if (n.balanceFactor == -2)
             if (cmp.compare(elem,n.right.elem) > 0){
                 n = rotateWithRightChild(n);
@@ -65,23 +78,24 @@ public class AVLTree2<T> {
             return n;
     }
 
-    public boolean remove(T elem){
+    public boolean remove(T elem,int blockId){
         if(elem == null) return false;
         int prevSize = size;
-        head = removeR(elem,head);
+        head = removeR(elem,head,blockId);
         return prevSize > size;
     }
 
-    private Node<T> removeR(T elem,Node<T> current){
+    private Node<T> removeR(T elem,Node<T> current,int blockId){
         if(current == null){
             return null;
         }
         /*  si es menor*/
         if(cmp.compare(current.elem,elem) > 0){
             int prevSize = size;
-            current.left = removeR(elem,current.left);
+            current.left = removeR(elem,current.left,blockId);
             if(size < prevSize){
-                current.height = Integer.max((current.left!=null?current.left.height:0),(current.right!=null?current.right.height:0)) + 1;
+                current.modifiersByRemoving.add(blockId);
+                current.updateHeight();
                 current.updateBalanceFactor();
                 if((current.balanceFactor > 1) || (current.balanceFactor < -1))  current = rotateWithRightChild(current);
             }
@@ -91,9 +105,10 @@ public class AVLTree2<T> {
         /*  si es mayor*/
         if(cmp.compare(current.elem,elem) < 0){
             int prevSize = size;
-            current.right = removeR(elem,current.right);
+            current.right = removeR(elem,current.right,blockId);
             if(size < prevSize){
-                current.height = Integer.max((current.left!=null?current.left.height:0),(current.right!=null?current.right.height:0)) + 1;
+                current.modifiersByRemoving.add(blockId);
+                current.updateHeight();
                 current.updateBalanceFactor();
                 if((current.balanceFactor > 1) || (current.balanceFactor < -1))  current = rotateWithLeftChild(current);
             }
@@ -103,16 +118,18 @@ public class AVLTree2<T> {
         /*  si es igual*/
         if(current.left == null){
             size--;
+            if(current.right != null)   current.right.modifiersByRemoving.add(blockId);
             return current.right;
         }
         Node<T> aux = getMinNode(current.right);
         if(aux == null){
             size--;
+            if (current.left != null)   current.left.modifiersByRemoving.add(blockId);
             return current.left;
         }
         Node<T> ret = new Node<T>(aux.elem,current.right,current.left);
-        ret.right = removeR(ret.elem,ret.right);
-        ret.height = Integer.max((ret.left!=null?ret.left.height:0),(ret.right!=null?ret.right.height:0)) + 1;
+        ret.right = removeR(ret.elem,ret.right,blockId);
+        ret.updateHeight();
 
         return ret;
      }
@@ -130,8 +147,8 @@ public class AVLTree2<T> {
         unbalanced.left = aux.right;
         aux.right = unbalanced;
 
-        unbalanced.height = Integer.max((unbalanced.left!=null?unbalanced.left.height:0),(unbalanced.right!=null?unbalanced.right.height:0)) + 1;
-        aux.height = Integer.max(aux.left!=null?aux.left.height:0,aux.right.height) + 1;
+        unbalanced.updateHeight();
+        aux.updateHeight();
 
         return aux;
     }
@@ -161,8 +178,8 @@ public class AVLTree2<T> {
         unbalanced.right = aux.left;
         aux.left = unbalanced;
 
-        unbalanced.height = Integer.max((unbalanced.left!=null?unbalanced.left.height:0),(unbalanced.right!=null?unbalanced.right.height:0)) + 1;
-        aux.height = Integer.max(aux.left.height,aux.right!=null?aux.right.height:0) + 1;
+        unbalanced.updateHeight();
+        aux.updateHeight();
 
         return aux;
     }
@@ -233,6 +250,9 @@ public class AVLTree2<T> {
         Node<T> right;
         int balanceFactor;
         int height;
+        ArrayList<Integer>  modifiersByAdding   = new ArrayList<>();
+        ArrayList<Integer>  modifiersByRemoving = new ArrayList<>();
+        ArrayList<Integer>  modifiersByRotation = new ArrayList<>();
 
         Node(T elem,Node<T> right,Node<T> left){
           this.elem = elem;
@@ -247,6 +267,8 @@ public class AVLTree2<T> {
             balanceFactor = 0;
             height = 1;
         }
+
+            void updateHeight() {   height = Integer.max((left!=null?left.height:0),(right!=null?right.height:0)) + 1; }
 
             void updateBalanceFactor(){
             balanceFactor = (left!=null?left.height:0) - (right!=null?right.height:0);
