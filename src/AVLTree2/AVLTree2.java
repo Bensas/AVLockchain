@@ -36,11 +36,11 @@ public class AVLTree2<T> {
         if(cmp.compare(current.elem,elem) > 0){
             current.left = addR(elem,current.left,blockId,wasModified);
             current.updateBalanceFactor();
-            current = balanceLeft(current,elem);
+            current = balanceLeft(current,elem,blockId);
         } else if(cmp.compare(current.elem,elem) < 0){
             current.right = addR(elem,current.right,blockId,wasModified);
             current.updateBalanceFactor();
-            current = balanceRight(current,elem);
+            current = balanceRight(current,elem,blockId);
         }
 
         if(wasModified.get()){
@@ -51,29 +51,29 @@ public class AVLTree2<T> {
         return current;
     }
 
-    private Node<T> balanceLeft(Node<T> n,T elem){
+    private Node<T> balanceLeft(Node<T> n,T elem,int blockId){
         n.updateHeight();
         n.updateBalanceFactor();
         if(n.balanceFactor == 2){
             if (cmp.compare(n.left.elem,elem) > 0){
-                n = rotateWithLeftChild(n);
+                n = rotateWithLeftChild(n,blockId);
             }
             else {
-                n = doubleWithLeftChild(n);
+                n = doubleWithLeftChild(n,blockId);
             }
         }
         return n;
     }
 
-    private Node<T> balanceRight(Node<T> n,T elem){
+    private Node<T> balanceRight(Node<T> n,T elem,int blockId){
         n.updateHeight();
         n.updateBalanceFactor();
         if (n.balanceFactor == -2)
             if (cmp.compare(elem,n.right.elem) > 0){
-                n = rotateWithRightChild(n);
+                n = rotateWithRightChild(n,blockId);
             }
             else{
-                n = doubleWithRightChild(n);
+                n = doubleWithRightChild(n,blockId);
             }
             return n;
     }
@@ -89,7 +89,7 @@ public class AVLTree2<T> {
         if(current == null){
             return null;
         }
-        /*  si es menor*/
+        /*  if its smaller*/
         if(cmp.compare(current.elem,elem) > 0){
             int prevSize = size;
             current.left = removeR(elem,current.left,blockId);
@@ -97,12 +97,12 @@ public class AVLTree2<T> {
                 current.modifiersByRemoving.add(blockId);
                 current.updateHeight();
                 current.updateBalanceFactor();
-                if((current.balanceFactor > 1) || (current.balanceFactor < -1))  current = rotateWithRightChild(current);
+                if((current.balanceFactor > 1) || (current.balanceFactor < -1))  current = rotateWithRightChild(current,blockId);
             }
             return current;
         }
 
-        /*  si es mayor*/
+        /*  if its grater*/
         if(cmp.compare(current.elem,elem) < 0){
             int prevSize = size;
             current.right = removeR(elem,current.right,blockId);
@@ -110,12 +110,12 @@ public class AVLTree2<T> {
                 current.modifiersByRemoving.add(blockId);
                 current.updateHeight();
                 current.updateBalanceFactor();
-                if((current.balanceFactor > 1) || (current.balanceFactor < -1))  current = rotateWithLeftChild(current);
+                if((current.balanceFactor > 1) || (current.balanceFactor < -1))  current = rotateWithLeftChild(current,blockId);
             }
             return current;
         }
 
-        /*  si es igual*/
+        /*  if its equals*/
         if(current.left == null){
             size--;
             if(current.right != null)   current.right.modifiersByRemoving.add(blockId);
@@ -141,10 +141,16 @@ public class AVLTree2<T> {
      * @param unbalanced Node unbalanced that is gonna be rotated.
      * @return upper Node in the new rotation.
      */
-    private Node<T> rotateWithLeftChild(Node<T> unbalanced){
+    private Node<T> rotateWithLeftChild(Node<T> unbalanced,int blockId){
         Node<T> aux = unbalanced.left;
+        unbalanced.modifiersByRotation.add(blockId);
+
+        if(unbalanced.left != null) unbalanced.left.modifiersByRotation.add(blockId);
 
         unbalanced.left = aux.right;
+
+        if(aux.right != null)   aux.right.modifiersByRotation.add(blockId);
+
         aux.right = unbalanced;
 
         unbalanced.updateHeight();
@@ -160,9 +166,9 @@ public class AVLTree2<T> {
      * @param unbalanced Node unbalanced that is gonna be rotated.
      * @return upper Node in the new rotation.
      */
-    private Node<T> doubleWithLeftChild(Node<T> unbalanced){
-        unbalanced.left = rotateWithRightChild(unbalanced.left);
-        return rotateWithLeftChild(unbalanced);
+    private Node<T> doubleWithLeftChild(Node<T> unbalanced,int blockId){
+        unbalanced.left = rotateWithRightChild(unbalanced.left,blockId);
+        return rotateWithLeftChild(unbalanced,blockId);
     }
 
     /**
@@ -172,10 +178,14 @@ public class AVLTree2<T> {
      * @param unbalanced Node unbalanced that is gonna be rotated.
      * @return upper Node in the new rotation.
      */
-    private Node<T> rotateWithRightChild(Node<T> unbalanced){
+    private Node<T> rotateWithRightChild(Node<T> unbalanced,int blockId){
         Node<T> aux = unbalanced.right;
 
+        unbalanced.modifiersByRotation.add(blockId);
+        if(unbalanced.right != null)    unbalanced.right.modifiersByRotation.add(blockId);
+
         unbalanced.right = aux.left;
+
         aux.left = unbalanced;
 
         unbalanced.updateHeight();
@@ -191,9 +201,9 @@ public class AVLTree2<T> {
      * @param unbalanced Node unbalanced that is gonna be rotated.
      * @return upper Node in the new rotation.
      */
-    private Node<T> doubleWithRightChild(Node<T> unbalanced){
-        unbalanced.right = rotateWithLeftChild(unbalanced.right);
-        return rotateWithRightChild(unbalanced);
+    private Node<T> doubleWithRightChild(Node<T> unbalanced,int blockId){
+        unbalanced.right = rotateWithLeftChild(unbalanced.right,blockId);
+        return rotateWithRightChild(unbalanced,blockId);
     }
 
     public int height(){
