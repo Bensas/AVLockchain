@@ -26,6 +26,17 @@ public class TreeChain implements Serializable {
         if (balance == null) balance = new AVLTree();
     }
 
+    public boolean modifyHash(int blockID, String newHash){
+        Block current = last;
+        while (current.getIndex() != blockID){
+            current = current.getPrevBlock();
+            if (current == null)
+                return false;
+        }
+        current.setHash(newHash);
+        return true;
+    }
+
     /**
      * @param element wanted to be added in the avl tree.
      * @return true if the element was added to the AVL tree. False otherwise.

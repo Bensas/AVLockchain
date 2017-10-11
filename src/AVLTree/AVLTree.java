@@ -215,9 +215,6 @@ public class AVLTree implements Serializable{
                 }
             }
         }
-        else{
-            System.out.println("WUBBA LUBBA DUB DUB BIATCH"); //TODO: DELET DIS
-        }
     }
 
 

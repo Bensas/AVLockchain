@@ -24,9 +24,8 @@ public class AVLockchain {
             chain = new TreeChain(zeroes);
             System.out.println("A new blockhain has been created.");
         }
-        System.out.println(chain.getSize());
 
-        //chain.setZeroes(zeroes);
+        chain.setZeroes(zeroes);
 
         System.out.println("Your tree looks like this: ");
         chain.getBalance().printTree();
@@ -38,8 +37,9 @@ public class AVLockchain {
             try{
                 processInput(input, chain);
                 System.out.println("Please enter the next command below:");
-            } catch (NumberFormatException e){
-                System.out.println("Invalid element.");
+            } catch (Exception e){
+                e.printStackTrace();
+                System.out.println("There is a problem with the input format.");
             }
         }
         saveChainToFile(chain, "tree_chain.eda");
@@ -75,12 +75,43 @@ public class AVLockchain {
         else if (input.contains("print")){
             chain.getBalance().printTree();
         }
+        else if (input.contains("modify")){
+            modifyBlockHashFromFile(input.split("modify ")[1], chain);
+        }
         else {
             System.out.println("The command is invalid.");
         }
     }
 
-    public static TreeChain loadChainFromFile(String fileName){
+    private static void modifyBlockHashFromFile(String fileName, TreeChain chain){
+        int blockID = 0;
+        String newHash = null;
+
+        String inputLn;
+        BufferedReader br = null;
+        try{
+            br = new BufferedReader(new FileReader(fileName));
+            while ((inputLn = br.readLine()) != null){
+                    try{
+                        if (inputLn.contains("Block ID: ")){
+                            blockID = Integer.parseInt(inputLn.split("Block ID: ")[1]);
+                        } else if (inputLn.contains("New Hash: ")){
+                            newHash = inputLn.split("New Hash: ")[1];
+                        } else {
+                            System.out.println("The mod file has an invalid format.");
+                        }
+                    } catch (NumberFormatException e){
+                        System.out.println("The mod file has an invalid format.");
+                    }
+            }
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+        chain.modifyHash(blockID, newHash);
+
+    }
+
+    private static TreeChain loadChainFromFile(String fileName){
         TreeChain chain = null;
         FileInputStream fin = null;
         ObjectInputStream oin = null;
@@ -97,7 +128,7 @@ public class AVLockchain {
         return chain;
     }
 
-    public static void saveChainToFile(TreeChain chain, String fileName){
+    private static void saveChainToFile(TreeChain chain, String fileName){
         FileOutputStream fout = null;
         ObjectOutputStream oos = null;
         try{
