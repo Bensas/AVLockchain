@@ -1,11 +1,12 @@
 # AVLockchain
+A blockchain that creates an AVL tree. Each block cotains an operation to be performed on the tree.
+To run the program:
+* Clone the repository
+* Inside the AVLockchain directory, run the folowing command from the terminal
 
-Trabajo práctico 1 de Estructura de Datos y Algoritmos
-
-Para correr el programa se debe hacer igual que como pide la consigna: Parado en AVLockchain ejecutar el comando:
 ```sh
 java -jar TPE.jar zeroes Z
 ```
-Donde Z es la cantidad de ceros que se tiene como condición para el minado de bloques.
+Where Z is the number of zeros the hash of a block must start with to be considered valid.
 
-# (TODO: CAMBIAR ZEROES A ZEROS)
+
