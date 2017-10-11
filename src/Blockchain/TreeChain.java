@@ -192,8 +192,8 @@ public class TreeChain implements Serializable {
         return true;
     }
     //A la noche lo termino (soy nacho negro)
-    public boolean lookup(int num){
-        return true;
+    public String lookup(int num){
+        return null;
     }
 
     public int getSize(){
