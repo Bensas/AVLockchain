@@ -1,12 +1,13 @@
 package AVLTree2;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class AVLTree2<T> {
+public class AVLTree2<T> implements Serializable{
 
     private int size;
     private Node<T> head;

@@ -1,5 +1,6 @@
 package Blockchain;
 import AVLTree.*;
+import AVLTree2.AVLTree2;
 
 import java.io.Serializable;
 import java.security.MessageDigest;
@@ -14,9 +15,10 @@ public class TreeChain implements Serializable {
     *   ninguna transacción (operación sobre el árbol) fue realizada aun.
     */
     private Block last = null;
-    private AVLTree balance;
+    private AVLTree2<Integer> balance;
     private int size = 0;
     private int zeroes;
+    private int lastIndex = 0;
 
     /**
      * TreeChain's Constructor, simulating a Blockchain.
@@ -25,7 +27,7 @@ public class TreeChain implements Serializable {
      */
     public TreeChain(int zeroes) {
         this.zeroes = zeroes;
-        if (balance == null) balance = new AVLTree();
+        if (balance == null) balance = new AVLTree2(new IntegerComparator());
     }
 
     public boolean modifyHash(int blockID, String newHash){
@@ -46,15 +48,17 @@ public class TreeChain implements Serializable {
      * @throws NoSuchAlgorithmException
      */
     public boolean add(int element) throws NoSuchAlgorithmException {
-        boolean result = balance.add(element, size);
+
+        boolean result = balance.add(element,lastIndex);
 
         String operation;
         if (result)
-            operation = "add";
+            operation = "Add : " + element;
         else
-            operation = "!add";
+            operation = "Failed at add : " + element;
 
         last = new Block(last, last == null ? FIRSTHASH : last.getHash(), operation, balance.hashCode());
+        lastIndex = last.getIndex();
         generateHash(last, ENCFUNCTION); //Después de crear el bloque debe generar el hash
         System.out.println("Mining... this could take a while");
         mine(last,ENCFUNCTION,zeroes); //Se mina el hash para que el bloque sea válido
@@ -68,15 +72,16 @@ public class TreeChain implements Serializable {
      * @return true if it was succesfully removed from the tree, or false if there wasn't such element in the tree.
      */
     public boolean remove(int element) throws NoSuchAlgorithmException{
-        boolean result = balance.remove();
+        boolean result = balance.remove(element,lastIndex);
         String operation;
         if(result) {
-            operation = "rmv";
+            operation = "Remove: " + element;
         }
         else
-            operation="!rmv";
+            operation="Failed at remove : " + element;
 
         last= new Block(last, last == null ? FIRSTHASH : last.getHash(), operation, balance.hashCode());
+        lastIndex = last.getIndex();
         size++;
         return result;
     }
@@ -85,7 +90,7 @@ public class TreeChain implements Serializable {
      *
      * @return current tree balance.
      */
-    public AVLTree getBalance() {
+    public AVLTree2 getBalance() {
         return balance;
     }
 
@@ -188,7 +193,7 @@ public class TreeChain implements Serializable {
     }
 
     public boolean lookup(int num){
-        return getBalance().find(num);
+        return true;
     }
 
     public int getSize(){
