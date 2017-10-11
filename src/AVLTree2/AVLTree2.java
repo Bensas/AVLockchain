@@ -1,10 +1,7 @@
 package AVLTree2;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class AVLTree2<T> implements Serializable{
@@ -141,18 +138,19 @@ public class AVLTree2<T> implements Serializable{
         return ret;
      }
 
-    public ArrayList<Integer> getModifiers(T elem) {
+    public ArrayList<HashSet<Integer>> getModifiers(T elem) {
         Node<T> current = head;
+        ArrayList<HashSet<Integer>> modifiers = new ArrayList<>();
         while (current != null){
             if (cmp.compare(current.elem, elem) < 0)
                 current = current.right;
             else if (cmp.compare(current.elem, elem) > 0)
                 current = current.left;
             else{
-                ArrayList<ArrayList<Integer>> modifiers = new ArrayList<>();
                 modifiers.add(current.modifiersByAdding);
                 modifiers.add(current.modifiersByRemoving);
                 modifiers.add(current.modifiersByRotation);
+                return modifiers;
             }
         }
         return null;
@@ -284,9 +282,9 @@ public class AVLTree2<T> implements Serializable{
         Node<T> right;
         int balanceFactor;
         int height;
-        ArrayList<Integer>  modifiersByAdding   = new ArrayList<>();
-        ArrayList<Integer>  modifiersByRemoving = new ArrayList<>();
-        ArrayList<Integer>  modifiersByRotation = new ArrayList<>();
+        HashSet<Integer> modifiersByAdding   = new HashSet<>();
+        HashSet<Integer>  modifiersByRemoving = new HashSet<>();
+        HashSet<Integer>  modifiersByRotation = new HashSet<>();
 
         Node(T elem,Node<T> right,Node<T> left){
           this.elem = elem;
