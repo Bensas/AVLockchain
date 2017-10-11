@@ -24,7 +24,7 @@ public class AVLTree implements Serializable{
     /**
      *
      * @param id id to search in the avl tree.
-     * @return true if the avl tree contains the id or false otherwise.
+     * @return true if the node was found, false if otherwise.
      */
     public boolean find(int id){
         Node current = root;
@@ -38,6 +38,25 @@ public class AVLTree implements Serializable{
             }
         }
         return false;
+    }
+
+    /**
+     *
+     * @param id id to search in the avl tree.
+     * @return true if the node was found, false if otherwise.
+     */
+    public ArrayList<Integer> lookUp(int id){
+        Node current = root;
+        while(current!=null){
+            if(current.data==id){
+                return current.modifierBlocks;
+            }else if(current.data>id){
+                current = current.left;
+            }else{
+                current = current.right;
+            }
+        }
+        return null;
     }
 
     /**
@@ -81,7 +100,7 @@ public class AVLTree implements Serializable{
      *
      * @param data wanted to be added.
      * @param current Node.
-     * @param modified if it has been a modification.
+     * @param modified if there has been a modification.
      * @param modifierBlock which block is making the modification.
      * @return a Node that should be the child of the previous recursive call.
      */
@@ -301,6 +320,20 @@ public class AVLTree implements Serializable{
          */
         public int hashCode () {
             return this.data +37*(getBalanceFactor() + 2);
+        }
+    }
+
+    public static void main(String[] args){
+
+        AVLTree t= new AVLTree();
+        t.add(1,0);
+        t.add(2,1);
+        t.add(3,2);
+        t.add(4,3);
+
+        ArrayList<Integer> a= t.lookUp(1);
+        for(Integer i: a){
+            System.out.println(i + " ");
         }
     }
 }

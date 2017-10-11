@@ -18,32 +18,38 @@ public class AVLTree2<T> {
         this.cmp = cmp;
     }
 
+    public AVLTree2(){
+        size = 0;
+        head = null;
+        this.cmp = new ComparableComparator<>();
+    }
+
     public boolean add(T elem,int blockId){
         if(elem == null) return false;
         int prevSize = size;
-        head = addR(elem,head,blockId,new AtomicBoolean(false));
+        head = addR(elem,head,blockId);
         return size > prevSize;
     }
 
-    private Node<T> addR(T elem, Node<T> current, int blockId, AtomicBoolean wasModified){
+    private Node<T> addR(T elem, Node<T> current, int blockId){
+        int prevSize= size;
         if(current == null){
             size++;
             current = new Node<T>(elem);
             current.modifiersByAdding.add(blockId);
-            wasModified.set(true);
             return current;
         }
         if(cmp.compare(current.elem,elem) > 0){
-            current.left = addR(elem,current.left,blockId,wasModified);
+            current.left = addR(elem,current.left,blockId);
             current.updateBalanceFactor();
             current = balanceLeft(current,elem,blockId);
         } else if(cmp.compare(current.elem,elem) < 0){
-            current.right = addR(elem,current.right,blockId,wasModified);
+            current.right = addR(elem,current.right,blockId);
             current.updateBalanceFactor();
             current = balanceRight(current,elem,blockId);
         }
 
-        if(wasModified.get()){
+        if(prevSize < size){
             current.modifiersByAdding.add(blockId);
         }
 
@@ -102,7 +108,7 @@ public class AVLTree2<T> {
             return current;
         }
 
-        /*  if its grater*/
+        /*  if its greater*/
         if(cmp.compare(current.elem,elem) < 0){
             int prevSize = size;
             current.right = removeR(elem,current.right,blockId);
@@ -134,11 +140,28 @@ public class AVLTree2<T> {
         return ret;
      }
 
+    public ArrayList<Integer> getModifiers(T elem) {
+        Node<T> current = head;
+        while (current != null){
+            if (cmp.compare(current.elem, elem) < 0)
+                current = current.right;
+            else if (cmp.compare(current.elem, elem) > 0)
+                current = current.left;
+            else{
+                ArrayList<ArrayList<Integer>> modifiers = new ArrayList<>();
+                modifiers.add(current.modifiersByAdding);
+                modifiers.add(current.modifiersByRemoving);
+                modifiers.add(current.modifiersByRotation);
+            }
+        }
+        return null;
+    }
+
      /**
      *
      * Left rotation.
      *
-     * @param unbalanced Node unbalanced that is gonna be rotated.
+     * @param unbalanced unbalanced Node which is going to be rotated.
      * @return upper Node in the new rotation.
      */
     private Node<T> rotateWithLeftChild(Node<T> unbalanced,int blockId){
@@ -175,7 +198,7 @@ public class AVLTree2<T> {
      *
      * Right rotation.
      *
-     * @param unbalanced Node unbalanced that is gonna be rotated.
+     * @param unbalanced unbalanced Node that is going to be rotated.
      * @return upper Node in the new rotation.
      */
     private Node<T> rotateWithRightChild(Node<T> unbalanced,int blockId){
@@ -287,5 +310,13 @@ public class AVLTree2<T> {
             public int hashCode () {
                 return this.elem.hashCode() * (balanceFactor + 2);
             }
+    }
+
+    private class ComparableComparator<T> implements Comparator<T>{
+
+        public int compare(T elem1,T elem2){
+            Comparable<T> cmpElem= (Comparable<T>) elem1;
+            return cmpElem.compareTo(elem2);
+        }
     }
 }

@@ -4,6 +4,7 @@ import AVLTree.*;
 import java.io.Serializable;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 
 public class TreeChain implements Serializable {
     private static final String FIRSTHASH = "00000000000000000000000000000000";
