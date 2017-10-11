@@ -70,9 +70,7 @@ public class AVLTree implements Serializable{
     public boolean add (int data, int modifierBlock){
         int previousSize= size;
         root = add (data, root, new AtomicBoolean(false), modifierBlock);
-        if(size > previousSize)
-            return true;
-        return false;
+        return size > previousSize;
     }
 
     /**
