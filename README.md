@@ -8,4 +8,4 @@ java -jar TPE.jar zeroes Z
 ```
 Donde Z es la cantidad de ceros que se tiene como condición para el minado de bloques.
 
-#(TODO: CAMBIAR ZEROES A ZEROS)
+# (TODO: CAMBIAR ZEROES A ZEROS)
