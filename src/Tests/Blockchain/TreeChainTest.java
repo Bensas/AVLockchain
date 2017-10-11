@@ -15,17 +15,20 @@ import static org.junit.Assert.assertTrue;
 public class TreeChainTest {
     private TreeChain chain1;
     private Block dummyBlock1;
+    private int sizeTest;
     @Before
     public void Before() throws NoSuchAlgorithmException{
-        chain1 = new TreeChain(5);
+        chain1 = new TreeChain(3);
         chain1.add(23);
+        sizeTest=1;
         dummyBlock1 = chain1.getLast();
     }
 
     @Test
     public void addModifiesSize() throws NoSuchAlgorithmException {
+        sizeTest+=1;
         chain1.add(2);
-        assertEquals(1,chain1.getSize());
+        assertEquals(sizeTest,chain1.getSize());
     }
 
     @Test
