@@ -8,7 +8,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  *
  * AVL Tree class with its basic functions
  * Node class is defined inside it.
- *
+ *  @deprecated
  */
 public class AVLTree implements Serializable{
     public Node root;

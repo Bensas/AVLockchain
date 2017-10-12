@@ -30,6 +30,13 @@ public class TreeChain implements Serializable {
         if (balance == null) balance = new AVLTree2(new IntegerComparator());
     }
 
+    /**
+     * Manually sets the hash value of a specified block.
+     *
+     * @param blockID ID of the block that will be modified.
+     * @param newHash number to be assigned as the hash for the block.
+     * @return true if the hash was successfully assigned, false if no block with matching ID was found.
+     */
     public boolean modifyHash(int blockID, String newHash){
         Block current = last;
         while (current.getIndex() != blockID){

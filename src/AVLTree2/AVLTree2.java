@@ -276,7 +276,7 @@ public class AVLTree2<T> implements Serializable{
         }
     }
 
-    private static class Node<T>{
+    private static class Node<T> implements Serializable{
         T elem;
         Node<T> left;
         Node<T> right;

@@ -9,13 +9,13 @@ public class AVLockchain {
     public static void main(String args[]) throws NoSuchAlgorithmException{
         int zeroes = 0;
         if (args.length == 0 || !args[0].equals("zeroes")){
-            System.out.print("Please initialize the program with the parameter 'zeroes' followed by the number of zeroes hashes must start with. Exiting program.");
+            System.out.println("Please initialize the program with the parameter 'zeroes' followed by the number of zeroes hashes must start with. Exiting program.");
             System.exit(1);
         }
         try{
             zeroes = Integer.parseInt(args[1]);
         } catch (Exception e){
-            System.out.print("The number of zeroes specified is not valid. Exiting program.");
+            System.out.println("The number of zeroes specified is not valid. Exiting program.");
             System.exit(1);
         }
 
@@ -52,7 +52,7 @@ public class AVLockchain {
             if (chain.add(Integer.parseInt(input.split("add ")[1])))
                 System.out.println(Integer.parseInt(input.split("add ")[1]) + " added successfully!");
             else
-                System.out.println("There was an error adding the element to the tree.");
+                System.out.println("There was an error adding the element to the tree. Make sure that it hasn't already been added.");
         }
         else if (input.contains("remove")){
             if (chain.remove(Integer.parseInt(input.split("remove ")[1])))
@@ -61,10 +61,11 @@ public class AVLockchain {
                 System.out.println("There was an error removing the element from the tree.");
         }
         else if (input.contains("lookup")){
-            if (chain.lookup(Integer.parseInt(input.split("lookup ")[1])))
-                System.out.println(Integer.parseInt(input.split("lookup ")[1]) + " was found!");
-            else
+            String result = chain.lookup(Integer.parseInt(input.split("lookup ")[1]));
+            if ( result == null)
                 System.out.println(Integer.parseInt(input.split("lookup ")[1]) + " was not found. :(");
+            else
+                System.out.println(Integer.parseInt(input.split("lookup ")[1]) + " was found!");
         }
         else if (input.contains("validate")){
             if (!chain.validate())
