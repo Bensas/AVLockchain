@@ -66,6 +66,7 @@ public class AVLockchain {
                 System.out.println(Integer.parseInt(input.split("lookup ")[1]) + " was not found. :(");
             else
                 System.out.println(result);
+            //dsa
         }
         else if (input.contains("validate")){
             if (!chain.validate())
