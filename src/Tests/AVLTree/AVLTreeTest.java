@@ -1,54 +1,89 @@
-
 package Tests.AVLTree;
 
 import AVLTree.AVLTree;
+import Blockchain.Block;
+import Blockchain.TreeChain;
 import org.junit.Before;
 import org.junit.Test;
+import java.util.Comparator;
+
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 
-public class AVLTreeTest {
-    private AVLTree tree1;
-    private AVLTree tree2;
+public class AVLTreeTest
+{
 
+    private AVLTree<Integer> bt;
+    private Block b;
+
+
+    class MyIntComparator implements Comparator<Integer>{
+        public int compare(Integer a,Integer b){
+            return a-b;
+        }
+    }
     @Before
     public void Before(){
-        tree1 = new AVLTree();
-        tree2 = new AVLTree();
-        tree2.add(2,10); //TODO ver bien qué valores toma modifierBlock
-        tree2.add(4,11);
-        tree2.add(5,12);
-        tree2.add(1,13);
+        bt = new AVLTree<Integer>(new MyIntComparator());
+        b = new Block(null,TreeChain.FIRSTHASH,"add",bt.hashCode());
+        bt.add(1,b.getIndex());
+        bt.add(10,b.getIndex());
+        bt.add(15,b.getIndex());
+        bt.add(16,b.getIndex());
+        bt.add(12,b.getIndex());
+        bt.add(14,b.getIndex());
+        bt.add(13,b.getIndex());
+        bt.add(9,b.getIndex());
+        bt.printTree();
+        System.out.println("BALANCE FACTOR = " + bt.balanceFactor());
+        System.out.println("HEIGHT = " + bt.height());
+        System.out.println("TERMINO EL BEFORE\n\n");
+
+
     }
 
     @Test
-    public void removeWithZeroElementsReturnsFalse(){
-        assertFalse(tree1.remove());
+    public void addNonExistingElementReturnTrue(){
+        assertTrue(bt.add(11,b.getIndex()));
     }
 
     @Test
-    public void removeWithMoreThanOneElementReturnsTrue(){
-        tree1.add(12,10);
-        assertTrue(tree1.remove()); // TODO hacer remove
+    public void addExistingElementReturnFalse(){
+        assertFalse(bt.add(16,b.getIndex()));
     }
 
     @Test
-    public void findExistingElement(){
-        assertTrue(tree2.find(5));
+    public void addNullReturnFalse(){
+        assertFalse(bt.add(null,b.getIndex()));
     }
 
     @Test
-    public void findNonExistingElementReturnsFalse(){
-        assertFalse(tree2.find(120));
+    public void removeNonExistingElementReturnFalse(){
+        assertFalse(bt.remove(25,b.getIndex()));
+        bt.printTree();
+        System.out.println("BALANCE FACTOR = " + bt.balanceFactor());
+        System.out.println("HEIGHT = " + bt.height());
+
     }
 
-    //TODO Ver que agregar los modifierBlock random no me rompan todo
     @Test
-    public void addExistingElementReturnsFalse(){
-        assertFalse(tree2.add(2,2));
+    public void removeExistingElementReturnTrue(){
+        assertTrue(bt.remove(16,b.getIndex()));
+        bt.printTree();
+        System.out.println("BALANCE FACTOR = " + bt.balanceFactor());
+        System.out.println("HEIGHT = " + bt.height());
     }
+
     @Test
-    public void addNotExistingElementReturnsTrue(){
-        assertTrue(tree2.add(124,3));
+    public void removeRootReturnTrue(){
+        assertTrue(bt.remove(12,b.getIndex()));
+        System.out.println("size = " + bt.size());
+        bt.printTree();
+        System.out.println("BALANCE FACTOR = " + bt.balanceFactor());
+        System.out.println("HEIGHT = " + bt.height());
+
     }
+
+
+
 }

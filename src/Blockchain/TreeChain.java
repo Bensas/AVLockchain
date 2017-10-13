@@ -1,6 +1,5 @@
 package Blockchain;
-import AVLTree.*;
-import AVLTree2.AVLTree2;
+import AVLTree.AVLTree;
 
 import java.io.Serializable;
 import java.security.MessageDigest;
@@ -9,6 +8,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 public class TreeChain implements Serializable {
+    // Importante!: Agregar al final de FIRSTHASH 32 ceros más
+    // si se va a cambiar la ENCFUNCTION a SHA-256
     public static final String FIRSTHASH = "00000000000000000000000000000000";
     public static final String ENCFUNCTION = "MD5";
     /*  Puesto que los bloques contienen transacciones, el primer bloque debe ser null.
@@ -16,7 +17,7 @@ public class TreeChain implements Serializable {
     *   ninguna transacción (operación sobre el árbol) fue realizada aun.
     */
     private Block last = null;
-    private AVLTree2<Integer> balance;
+    private AVLTree<Integer> balance;
     private int size = 0;
     private int zeroes;
     private int lastIndex = 0;
@@ -28,7 +29,7 @@ public class TreeChain implements Serializable {
      */
     public TreeChain(int zeroes) {
         this.zeroes = zeroes;
-        if (balance == null) balance = new AVLTree2(new IntegerComparator());
+        if (balance == null) balance = new AVLTree(new IntegerComparator());
     }
 
     /**
@@ -111,33 +112,9 @@ public class TreeChain implements Serializable {
      *
      * @return current tree balance.
      */
-    public AVLTree2 getBalance() {
+    public AVLTree getBalance() {
         return balance;
     }
-
-    /* TODO Para agregar cuando tengamos lo demás
-    public AVLTree getBalanceAt(int index){
-
-        if(index>=size || index<0)
-            throw new NonExistantTransactionException();
-        if(index== size - 1)
-            return getBalance();
-        Block current= last;
-        while(index>0){
-            current=current.getPrevBlock();
-            index--;
-        }
-        return buildTree(current);
-
-    }
-
-    public AVLTree buildTree(Block last){
-
-        Block current= last;
-        AVLTree tree= new AVLTree();
-
-    }
-    */
 
     /**
      * Checks the integrity of the blockchain

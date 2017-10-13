@@ -5,7 +5,6 @@ import Blockchain.TreeChain;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
 import java.security.NoSuchAlgorithmException;
 
 import static org.junit.Assert.assertEquals;
@@ -60,7 +59,7 @@ public class TreeChainTest {
 
     @Test
     public void proofOfWorkTimeTest() throws NoSuchAlgorithmException{
-        chain1.mine(dummyBlock1,TreeChain.ENCFUNCTION, chain1.getZeroes());
+        chain1.mine(dummyBlock1,TreeChain.ENCFUNCTION , chain1.getZeroes());
         Assert.assertEquals(1,1);
     }
 

@@ -2,157 +2,181 @@ package AVLTree;
 
 import java.io.Serializable;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 
-/**
- *
- * AVL Tree class with its basic functions
- * Node class is defined inside it.
- *  @deprecated
- */
-public class AVLTree implements Serializable{
-    public Node root;
-    int size= 0;
 
-    /**
-     * Constructor of the class that only initialize root.
-     */
-    public AVLTree(){
-        root = null;
+public class AVLTree<T> implements Serializable{
+
+    private int size;
+    private Node<T> head;
+    private Comparator<T> cmp;
+
+    public AVLTree(Comparator<T> cmp){
+        size = 0;
+        head = null;
+        this.cmp = cmp;
     }
 
-    /**
-     *
-     * @param id id to search in the avl tree.
-     * @return true if the node was found, false if otherwise.
-     */
-    public boolean find(int id){
-        Node current = root;
-        while(current!=null){
-            if(current.data==id){
-                return true;
-            }else if(current.data>id){
-                current = current.left;
-            }else{
-                current = current.right;
+    public AVLTree(){
+        size = 0;
+        head = null;
+        this.cmp = new ComparableComparator<>();
+    }
+
+    public boolean add(T elem,int blockId){
+        if(elem == null) return false;
+        int prevSize = size;
+        head = addR(elem,head,blockId);
+        return size > prevSize;
+    }
+
+    private Node<T> addR(T elem, Node<T> current, int blockId){
+        int prevSize= size;
+        if(current == null){
+            size++;
+            current = new Node<T>(elem);
+            current.modifiersByAdding.add(blockId);
+            return current;
+        }
+        if(cmp.compare(current.elem,elem) > 0){
+            current.left = addR(elem,current.left,blockId);
+            current.updateBalanceFactor();
+            current = balanceLeft(current,elem,blockId);
+        } else if(cmp.compare(current.elem,elem) < 0){
+            current.right = addR(elem,current.right,blockId);
+            current.updateBalanceFactor();
+            current = balanceRight(current,elem,blockId);
+        }
+
+        if(prevSize < size){
+            current.modifiersByAdding.add(blockId);
+        }
+
+        current.updateHeight();
+        return current;
+    }
+
+    private Node<T> balanceLeft(Node<T> n,T elem,int blockId){
+        n.updateHeight();
+        n.updateBalanceFactor();
+        if(n.balanceFactor == 2){
+            if (cmp.compare(n.left.elem,elem) > 0){
+                n = rotateWithLeftChild(n,blockId);
+            }
+            else {
+                n = doubleWithLeftChild(n,blockId);
             }
         }
-        return false;
+        return n;
     }
 
-    /**
-     *
-     * @param id id to search in the avl tree.
-     * @return true if the node was found, false if otherwise.
-     */
-    public ArrayList<Integer> lookUp(int id){
-        Node current = root;
-        while(current!=null){
-            if(current.data==id){
-                return current.modifierBlocks;
-            }else if(current.data>id){
-                current = current.left;
-            }else{
+    private Node<T> balanceRight(Node<T> n,T elem,int blockId){
+        n.updateHeight();
+        n.updateBalanceFactor();
+        if (n.balanceFactor == -2)
+            if (cmp.compare(elem,n.right.elem) > 0){
+                n = rotateWithRightChild(n,blockId);
+            }
+            else{
+                n = doubleWithRightChild(n,blockId);
+            }
+            return n;
+    }
+
+    public boolean remove(T elem,int blockId){
+        if(elem == null) return false;
+        int prevSize = size;
+        head = removeR(elem,head,blockId);
+        return prevSize > size;
+    }
+
+    private Node<T> removeR(T elem,Node<T> current,int blockId){
+        if(current == null){
+            return null;
+        }
+        /*  if its smaller*/
+        if(cmp.compare(current.elem,elem) > 0){
+            int prevSize = size;
+            current.left = removeR(elem,current.left,blockId);
+            if(size < prevSize){
+                current.modifiersByRemoving.add(blockId);
+                current.updateHeight();
+                current.updateBalanceFactor();
+                if((current.balanceFactor > 1) || (current.balanceFactor < -1))  current = rotateWithRightChild(current,blockId);
+            }
+            return current;
+        }
+
+        /*  if its greater*/
+        if(cmp.compare(current.elem,elem) < 0){
+            int prevSize = size;
+            current.right = removeR(elem,current.right,blockId);
+            if(size < prevSize){
+                current.modifiersByRemoving.add(blockId);
+                current.updateHeight();
+                current.updateBalanceFactor();
+                if((current.balanceFactor > 1) || (current.balanceFactor < -1))  current = rotateWithLeftChild(current,blockId);
+            }
+            return current;
+        }
+
+        /*  if its equals*/
+        if(current.left == null){
+            size--;
+            if(current.right != null)   current.right.modifiersByRemoving.add(blockId);
+            return current.right;
+        }
+        Node<T> aux = getMinNode(current.right);
+        if(aux == null){
+            size--;
+            if (current.left != null)   current.left.modifiersByRemoving.add(blockId);
+            return current.left;
+        }
+        Node<T> ret = new Node<T>(aux.elem,current.right,current.left);
+        ret.right = removeR(ret.elem,ret.right,blockId);
+        ret.updateHeight();
+
+        return ret;
+     }
+
+    public ArrayList<HashSet<Integer>> getModifiers(T elem) {
+        Node<T> current = head;
+        ArrayList<HashSet<Integer>> modifiers = new ArrayList<>();
+        while (current != null){
+            if (cmp.compare(current.elem, elem) < 0)
                 current = current.right;
+            else if (cmp.compare(current.elem, elem) > 0)
+                current = current.left;
+            else{
+                modifiers.add(current.modifiersByAdding);
+                modifiers.add(current.modifiersByRemoving);
+                modifiers.add(current.modifiersByRotation);
+                return modifiers;
             }
         }
         return null;
     }
 
-    /**
-     *
-     * @param n Node which you want to know its height.
-     * @return node's height if its not null. Otherwise it returns -1.
-     */
-    public int height (Node n){
-        return n == null ? -1 : n.height;
-    }
-
-    /**
-     *
-     * @param a first value.
-     * @param b second value.
-     * @return which value is higher.
-     */
-    public int max (int a, int b){
-        if (a > b)
-            return a;
-        return b;
-    }
-
-    /**
-     *
-     * @param data wanted to add in the avl tree.
-     * @param modifierBlock which block is making the modification.
-     * @return if the data was successfully added by checking avl size.
-     */
-    public boolean add (int data, int modifierBlock){
-        int previousSize= size;
-        root = add (data, root, new AtomicBoolean(false), modifierBlock);
-        return size > previousSize;
-    }
-
-    /**
-     *
-     * Wrapper's recursive add. If the tree gets unbalanced when the insertion is made, then a rotation ocurrs.
-     *
-     * @param data wanted to be added.
-     * @param current Node.
-     * @param modified if there has been a modification.
-     * @param modifierBlock which block is making the modification.
-     * @return a Node that should be the child of the previous recursive call.
-     */
-    private Node add (int data, Node current, AtomicBoolean modified, int modifierBlock){
-
-        if (current == null) {
-            current = new Node(data);
-            modified.set(true);
-            current.modifierBlocks.add(modifierBlock);
-            size++;
-        }
-        else if (data < current.data){
-            current.left = add(data, current.left, modified, modifierBlock);
-            if (height(current.left) - height(current.right) == 2){
-                if (data < current.left.data){
-                    current = rotateWithLeftChild(current);
-                }
-                else {
-                    current = doubleWithLeftChild(current);
-                }
-            }
-        }
-        else if (data > current.data){
-            current.right = add(data, current.right, modified, modifierBlock);
-
-            if ( height(current.right) - height(current.left) == 2)
-                if (data > current.right.data){
-                    current = rotateWithRightChild(current);
-                }
-                else{
-                    current = doubleWithRightChild(current);
-                }
-        }
-        if(modified.get())
-            current.modifierBlocks.add(modifierBlock);
-        current.height = max(height(current.left), height(current.right)) + 1;
-        return current;
-    }
-
-    /**
+     /**
      *
      * Left rotation.
      *
-     * @param unbalanced Node unbalanced that is gonna be rotated.
+     * @param unbalanced unbalanced Node which is going to be rotated.
      * @return upper Node in the new rotation.
      */
-    private Node rotateWithLeftChild(Node unbalanced){
-        Node aux = unbalanced.left;
+    private Node<T> rotateWithLeftChild(Node<T> unbalanced,int blockId){
+        Node<T> aux = unbalanced.left;
+        unbalanced.modifiersByRotation.add(blockId);
+
+        if(unbalanced.left != null) unbalanced.left.modifiersByRotation.add(blockId);
 
         unbalanced.left = aux.right;
+
+        if(aux.right != null)   aux.right.modifiersByRotation.add(blockId);
+
         aux.right = unbalanced;
 
-        unbalanced.height = max(height(unbalanced.left), height(unbalanced.right)) + 1;
-        aux.height = max(height(aux.left), unbalanced.height) + 1;
+        unbalanced.updateHeight();
+        aux.updateHeight();
 
         return aux;
     }
@@ -164,28 +188,32 @@ public class AVLTree implements Serializable{
      * @param unbalanced Node unbalanced that is gonna be rotated.
      * @return upper Node in the new rotation.
      */
-    private Node doubleWithLeftChild(Node unbalanced){
-        unbalanced.left = rotateWithRightChild(unbalanced.left);
-        return rotateWithLeftChild(unbalanced);
+    private Node<T> doubleWithLeftChild(Node<T> unbalanced,int blockId){
+        unbalanced.left = rotateWithRightChild(unbalanced.left,blockId);
+        return rotateWithLeftChild(unbalanced,blockId);
     }
 
     /**
      *
      * Right rotation.
      *
-     * @param unbalanced Node unbalanced that is gonna be rotated.
+     * @param unbalanced unbalanced Node that is going to be rotated.
      * @return upper Node in the new rotation.
      */
-    private Node rotateWithRightChild(Node unbalanced){
-        Node aux = unbalanced.right;
+    private Node<T> rotateWithRightChild(Node<T> unbalanced,int blockId){
+        Node<T> aux = unbalanced.right;
+
+        unbalanced.modifiersByRotation.add(blockId);
+        if(unbalanced.right != null)    unbalanced.right.modifiersByRotation.add(blockId);
 
         unbalanced.right = aux.left;
+
         aux.left = unbalanced;
 
-        unbalanced.height = max(height(unbalanced.left), height(unbalanced.right)) + 1;
-        aux.height = max(height(aux.right), unbalanced.height) + 1;
+        unbalanced.updateHeight();
+        aux.updateHeight();
 
-        return (aux);
+        return aux;
     }
 
     /**
@@ -195,20 +223,34 @@ public class AVLTree implements Serializable{
      * @param unbalanced Node unbalanced that is gonna be rotated.
      * @return upper Node in the new rotation.
      */
-    private Node doubleWithRightChild(Node unbalanced){
-        unbalanced.right = rotateWithLeftChild(unbalanced.right);
-        return rotateWithRightChild(unbalanced);
+    private Node<T> doubleWithRightChild(Node<T> unbalanced,int blockId){
+        unbalanced.right = rotateWithLeftChild(unbalanced.right,blockId);
+        return rotateWithRightChild(unbalanced,blockId);
     }
 
-    /**
-     *
-     * Prints the tree separating by levels, and adding Node's child data values.
-     */
+    public int height(){
+        return head.height;
+    }
+
+    public int balanceFactor(){
+        return head.balanceFactor;
+    }
+
+    private Node<T> getMinNode(Node<T> n){
+        if(n == null) return null;
+        if(n.left == null) return n;
+        return getMinNode(n.left);
+    }
+
+    public int size(){
+        return size;
+    }
+
     public void printTree(){
-        if (root != null) {
-            Queue<Node> s1 = new LinkedList<>();
-            Queue<Node> s2 = new LinkedList<>();
-            s1.add(root);
+        if (head != null) {
+            Queue<Node<T>> s1 = new LinkedList<>();
+            Queue<Node<T>> s2 = new LinkedList<>();
+            s1.add(head);
             int level = 0;
             while (!s1.isEmpty() || !s2.isEmpty()) {
                 if (s1.isEmpty()) {
@@ -217,15 +259,15 @@ public class AVLTree implements Serializable{
                 }
                 System.out.println("Level: " + level++);
                 while (!s1.isEmpty()) {
-                    Node aux = s1.remove();
-                    System.out.print(aux.data + " (");
+                    Node<T> aux = s1.remove();
+                    System.out.print(aux.elem + " (");
                     if (aux.left != null) {
-                        System.out.print(aux.left.data);
+                        System.out.print(aux.left.elem);
                         s2.add(aux.left);
                     }
                     System.out.print(",");
                     if (aux.right != null) {
-                        System.out.print(aux.right.data);
+                        System.out.print(aux.right.elem);
                         s2.add(aux.right);
                     }
                     System.out.println(")");
@@ -234,105 +276,46 @@ public class AVLTree implements Serializable{
         }
     }
 
+    private static class Node<T> implements Serializable{
+        T elem;
+        Node<T> left;
+        Node<T> right;
+        int balanceFactor;
+        int height;
+        HashSet<Integer> modifiersByAdding   = new HashSet<>();
+        HashSet<Integer>  modifiersByRemoving = new HashSet<>();
+        HashSet<Integer>  modifiersByRotation = new HashSet<>();
 
-    //  MAÑANA LO HAGO (SOY NACHO NEGRO)
-    public boolean remove() {
-
-
-        return true;
-    }
-
-    /**
-     *
-     * @return AVL tree prefix hash code.
-     */
-    public int hashCode(){
-        if(root == null)
-            return 0;
-        else
-            return hashCode(1, root);
-    }
-
-    /**
-     *
-     * HashCode's recursive wrapper function.
-     *
-     * @param currentHash the sum of all previous prefix values multiplied by 31.
-     * @param current Node.
-     */
-    private int hashCode(int currentHash, Node current){
-
-        if(current == null)
-            return currentHash;
-
-        currentHash= 31*currentHash + current.hashCode();
-        currentHash= hashCode(currentHash, current.left);
-        currentHash= hashCode(currentHash, current.right);
-        return currentHash;
-    }
-
-
-    /**
-     * Node class for the AVL tree.
-     */
-    private static class Node implements Serializable{
-        int data;
-        Node left;
-        Node right;
-        int height= 0;
-        ArrayList<Integer> modifierBlocks = new ArrayList<>();
-
-        /**
-         *
-         * @param data of the Node.
-         */
-        public Node(int data) {
-            this.data = data;
-            left = null;
-            right = null;
-            }
-
-        /**
-         *
-         * @param data of the Node.
-         * @param left Node.
-         * @param right Node.
-         */
-        public Node(int data, Node left, Node right){
-            this.data = data;
-            this.left = left;
-            this.right = right;
-            }
-
-        /**
-         *
-         * @return Node's balance factor.
-         */
-        public int getBalanceFactor(){
-            return (left == null?0:left.height) - (right == null? 0:right.height);
+        Node(T elem,Node<T> right,Node<T> left){
+          this.elem = elem;
+          this.right = right;
+          this.left = left;
+          updateBalanceFactor();
         }
 
-        /**
-         *
-         * @return Node's hash code.
-         */
-        public int hashCode () {
-            return this.data +37*(getBalanceFactor() + 2);
+        Node(T elem){
+            this.elem = elem;
+            left = right = null;
+            balanceFactor = 0;
+            height = 1;
         }
+
+            void updateHeight() {   height = Integer.max((left!=null?left.height:0),(right!=null?right.height:0)) + 1; }
+
+            void updateBalanceFactor(){
+            balanceFactor = (left!=null?left.height:0) - (right!=null?right.height:0);
+        }
+
+            public int hashCode () {
+                return this.elem.hashCode() * (balanceFactor + 2);
+            }
     }
 
-    public static void main(String[] args){
+    private class ComparableComparator<T> implements Comparator<T>{
 
-        AVLTree t= new AVLTree();
-        t.add(1,0);
-        t.add(2,1);
-        t.add(3,2);
-        t.add(4,3);
-
-        ArrayList<Integer> a= t.lookUp(1);
-        for(Integer i: a){
-            System.out.println(i + " ");
+        public int compare(T elem1,T elem2){
+            Comparable<T> cmpElem= (Comparable<T>) elem1;
+            return cmpElem.compareTo(elem2);
         }
     }
 }
-
