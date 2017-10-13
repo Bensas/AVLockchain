@@ -84,6 +84,11 @@ public class AVLTreeTest
 
     }
 
+    @Test
+    public void printAsciiRepresentation(){
+        System.out.println(bt.getAsciiRepresentation());
+    }
+
 
 
 }

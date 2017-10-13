@@ -132,7 +132,7 @@ public class AVLTree<T> implements Serializable{
      * @param elem element to be removed
      * @param current current node in scope
      * @param blockId identifier of the block
-     * @return returns the first element of the blockchain
+     * @return returns the root of the tree/subtree.
      */
     private Node<T> removeR(T elem,Node<T> current,int blockId){
         if(current == null){
@@ -331,6 +331,28 @@ public class AVLTree<T> implements Serializable{
                 }
             }
         }
+    }
+
+    public String   getAsciiRepresentation(){
+        return generateAsciiRepresentation(head,0,0);
+    }
+
+    /*  State: -1 = prev. was left; 0 = root; 1 = was right */
+
+    private String  generateAsciiRepresentation(Node<T> current,int level,int state){
+        String ret = new String();
+        if(current == null){
+            return "";
+        }
+        if(state == 0) {
+            return generateAsciiRepresentation(current.right, level + 1, 1) + "-"+ current.elem.toString() + "\n"+ generateAsciiRepresentation(current.left, level + 1, -1);
+        }
+        if(current.right != null)   ret += generateAsciiRepresentation(current.right,level+1,1) + "\n";
+        for (int i = 0; i < level; i++) ret += "\t";
+        if(state == 1)  ret +=  "/" + current.elem.toString();
+        else    ret +=  "\\" + current.elem.toString() ;
+        if(current.left != null) ret += "\n" + generateAsciiRepresentation(current.left,level+1,-1) + "\n";
+        return ret;
     }
 
     private static class Node<T> implements Serializable{

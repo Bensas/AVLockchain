@@ -28,7 +28,7 @@ public class AVLockchain {
         chain.setZeroes(zeroes);
 
         System.out.println("Your tree looks like this: ");
-        chain.getBalance().printTree();
+        System.out.println(chain.getBalance().getAsciiRepresentation());
 
         Scanner scanner = new Scanner(System.in);
         String input;
@@ -73,7 +73,7 @@ public class AVLockchain {
                 System.out.println("Blockchain is valid!");
         }
         else if (input.contains("print")){
-            chain.getBalance().printTree();
+            System.out.println(chain.getBalance().getAsciiRepresentation());
         }
         else if (input.contains("modify")){
             modifyBlockHashFromFile(input.split("modify ")[1], chain);
