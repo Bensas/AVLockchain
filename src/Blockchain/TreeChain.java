@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class TreeChain implements Serializable {
     private static final String FIRSTHASH = "00000000000000000000000000000000";
@@ -213,7 +214,37 @@ public class TreeChain implements Serializable {
     }
     //A la noche lo termino (soy nacho negro)
     public String lookup(int num){
-        return null;
+        ArrayList<HashSet<Integer>> modifiers = balance.getModifiers(num);
+        if (modifiers == null)  return null;
+        String ret = new String("Element " + num +" found successfully\n"+ "The element was modified by the following blocks \n");
+        String aux = new String();
+        int i = 0;
+        for (HashSet<Integer> set : modifiers){
+            if(set != null){
+                for (int blockId: set){
+                    aux += blockId + " ";
+                }
+
+                switch (i){
+                    case 0:{
+                        aux = "Modified by add: " + aux + "\n";
+                        break;
+                    }
+                    case 1:{
+                        aux = "Modified by remove: " + aux + "\n";
+                        break;
+                    }
+                    case 2:{
+                        aux = "Modified by rotation: " + aux + "\n";
+                        break;
+                    }
+                }
+                ret += aux;
+                aux = new String();
+            }
+            i++;
+        }
+        return ret;
     }
 
     public int getSize(){
