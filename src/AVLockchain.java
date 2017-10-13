@@ -64,8 +64,7 @@ public class AVLockchain {
             if (result == null)
                 System.out.println(Integer.parseInt(input.split("lookup ")[1]) + " was not found. :(");
             else
-                System.out.println(result);
-            //dsa
+                System.out.print(result);
         }
         else if (input.contains("validate")){
             if (!chain.validate())
@@ -106,7 +105,7 @@ public class AVLockchain {
                     }
             }
         } catch (IOException e){
-            e.printStackTrace();
+            System.out.println("No modification file with that name found :(");
         }
         chain.modifyHash(blockID, newHash);
 
@@ -122,7 +121,7 @@ public class AVLockchain {
             chain = (TreeChain) oin.readObject();
             System.out.println("The blockchain was loaded successfully.");
         } catch (FileNotFoundException e){
-            System.out.println("No blockchain file found.");
+            System.out.println("No blockchain file found :(");
         } catch (Exception e) {
             System.out.println("The blockchain file has been corrupted and thus cannot be loaded.");
         }
@@ -138,7 +137,7 @@ public class AVLockchain {
             oos.writeObject(chain);
             System.out.println("The blockchain was saved successfully.");
         } catch (IOException e){
-            e.printStackTrace();
+            System.out.println("There was a problem saving the blockchain. :(");
         }
     }
 }

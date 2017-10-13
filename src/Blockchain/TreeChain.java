@@ -57,7 +57,7 @@ public class TreeChain implements Serializable {
      */
     public boolean add(int element) throws NoSuchAlgorithmException {
 
-        boolean result = balance.add(element,lastIndex);
+        boolean result = balance.add(element,last==null?0:lastIndex+1);
 
         String operation;
         if (result)
@@ -85,7 +85,7 @@ public class TreeChain implements Serializable {
      * @return true if it was succesfully removed from the tree, or false if there wasn't such element in the tree.
      */
     public boolean remove(int element) throws NoSuchAlgorithmException{
-        boolean result = balance.remove(element,lastIndex);
+        boolean result = balance.remove(element,last==null?0:lastIndex+1);
         String operation;
         if(result) {
             operation = "Remove: " + element;
