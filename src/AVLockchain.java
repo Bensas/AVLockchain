@@ -8,7 +8,7 @@ public class AVLockchain {
 
     public static void main(String args[]) throws NoSuchAlgorithmException{
         int zeroes = 0;
-        if (args.length == 0 || !args[0].equals("zeroes")){
+        if (args.length == 0 || !args[0].equals("zeros")){
             System.out.println("Please initialize the program with the parameter 'zeroes' followed by the number of zeroes hashes must start with. Exiting program.");
             System.exit(1);
         }
