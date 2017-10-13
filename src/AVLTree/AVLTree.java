@@ -3,7 +3,10 @@ package AVLTree;
 import java.io.Serializable;
 import java.util.*;
 
-
+/**
+ * AVL tree implementation (with minor modifications)
+ * @param <T>
+ */
 public class AVLTree<T> implements Serializable{
 
     private int size;
@@ -22,6 +25,13 @@ public class AVLTree<T> implements Serializable{
         this.cmp = new ComparableComparator<>();
     }
 
+    /**
+     * Adds an element to the tree and logs the modification in a
+     * block
+     * @param elem element to be added
+     * @param blockId identifier of the block
+     * @return boolean: returns if the element was added successfully
+     */
     public boolean add(T elem,int blockId){
         if(elem == null) return false;
         int prevSize = size;
@@ -29,6 +39,13 @@ public class AVLTree<T> implements Serializable{
         return size > prevSize;
     }
 
+    /**
+     * Auxiliary recursive function to add an element
+     * @param elem element to be added
+     * @param current current node in scope
+     * @param blockId identifier of the block
+     * @return the first element of the blockchain
+     */
     private Node<T> addR(T elem, Node<T> current, int blockId){
         int prevSize= size;
         if(current == null){
@@ -55,6 +72,14 @@ public class AVLTree<T> implements Serializable{
         return current;
     }
 
+    /**
+     * Auxiliary function to check if the left subtree is balanced. If it's not performs
+     * a rotation.
+     * @param n
+     * @param elem
+     * @param blockId
+     * @return
+     */
     private Node<T> balanceLeft(Node<T> n,T elem,int blockId){
         n.updateHeight();
         n.updateBalanceFactor();
@@ -68,7 +93,14 @@ public class AVLTree<T> implements Serializable{
         }
         return n;
     }
-
+    /**
+     * Auxiliary function to check if the right subtree is balanced. If it's not performs
+     * a rotation.
+     * @param n
+     * @param elem
+     * @param blockId
+     * @return
+     */
     private Node<T> balanceRight(Node<T> n,T elem,int blockId){
         n.updateHeight();
         n.updateBalanceFactor();
@@ -82,6 +114,12 @@ public class AVLTree<T> implements Serializable{
             return n;
     }
 
+    /**
+     * Removes an element from the tree
+     * @param elem element to be removed
+     * @param blockId identifier of the block
+     * @return returns true if the element was removed
+     */
     public boolean remove(T elem,int blockId){
         if(elem == null) return false;
         int prevSize = size;
@@ -89,6 +127,13 @@ public class AVLTree<T> implements Serializable{
         return prevSize > size;
     }
 
+    /**
+     * Auxiliary function to remove an element from the tree
+     * @param elem element to be removed
+     * @param current current node in scope
+     * @param blockId identifier of the block
+     * @return returns the first element of the blockchain
+     */
     private Node<T> removeR(T elem,Node<T> current,int blockId){
         if(current == null){
             return null;
@@ -138,6 +183,11 @@ public class AVLTree<T> implements Serializable{
         return ret;
      }
 
+    /**
+     * Gets the elements that were modified by operations
+     * @param elem
+     * @return
+     */
     public ArrayList<HashSet<Integer>> getModifiers(T elem) {
         Node<T> current = head;
         ArrayList<HashSet<Integer>> modifiers = new ArrayList<>();
@@ -236,6 +286,11 @@ public class AVLTree<T> implements Serializable{
         return head.balanceFactor;
     }
 
+    /**
+     * Find the leftmost element of the tree recursively
+     * @param n current node in scope
+     * @return leftmost element
+     */
     private Node<T> getMinNode(Node<T> n){
         if(n == null) return null;
         if(n.left == null) return n;
@@ -245,7 +300,9 @@ public class AVLTree<T> implements Serializable{
     public int size(){
         return size;
     }
-
+    /**
+     *  Prints the tree
+     */
     public void printTree(){
         if (head != null) {
             Queue<Node<T>> s1 = new LinkedList<>();
