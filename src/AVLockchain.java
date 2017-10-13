@@ -38,7 +38,6 @@ public class AVLockchain {
                 processInput(input, chain);
                 System.out.println("Please enter the next command below:");
             } catch (Exception e){
-                e.printStackTrace();
                 System.out.println("There is a problem with the input format.");
             }
         }
