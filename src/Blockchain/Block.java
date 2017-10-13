@@ -4,18 +4,20 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
     /**
-     *  The blocks that make the blockchain. Each block has 4 elements:
-     *  - index         : It's position in the blockchain
-     *  - hash          : Number that makes the block unique, the blockchain
-     *                    considers the block as valid if this number starts
-     *                    with n zeros, where n is defined at the beginning of
-     *                    the program.
-     *  - previousHash  : The hash of the block that has index=this.index-1. If
-     *                    the block is the first block of the blockchain then
-     *                    previousHash=00000000000000000000000000000000 (because
-     *                    we are using a 32 digits encoding algorithm).
-     *  - nonce         : Starts at 0, it's the field that will be modified to
-     *                    get a hash that starts with n zeros.
+     *  The blocks that make the blockchain. Each block has 4 elements:<br>
+     *  <ul>
+     *      <li> index         : It's position in the blockchain</li>
+     *      <li> hash          : Number that makes the block unique, the blockchain
+     *                          considers the block as valid if this number starts
+     *                          with n zeros, where n is defined at the beginning of
+     *                          the program.</li>
+     *      <li> previousHash  : The hash of the block that has index=this.index-1. If
+     *                           the block is the first block of the blockchain then
+     *                           previousHash=00000000000000000000000000000000 (because
+     *                           we are using a 32 digits encoding algorithm). </li>
+     *      <li> nonce         : Starts at 0, it's the field that will be modified to
+     *                           get a hash that starts with n zeros. </li>
+     *  </ul>
      */
     public class Block implements Serializable{
         private int index;
