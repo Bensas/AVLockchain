@@ -27,11 +27,7 @@ public class TreeChainTest {
 
     @Test
     public void printModification() throws  NoSuchAlgorithmException{
-        chain1.add(5);
-        chain1.add(4);
         chain1.add(3);
-        chain1.add(2);
-        chain1.add(1);
         chain1.remove(23);
         System.out.println(chain1.lookup(3));
     }

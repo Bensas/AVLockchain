@@ -220,7 +220,7 @@ public class TreeChain implements Serializable {
         String aux = new String();
         int i = 0;
         for (HashSet<Integer> set : modifiers){
-            if(set != null){
+            if(set.size() > 0){
                 for (int blockId: set){
                     aux += blockId + " ";
                 }
