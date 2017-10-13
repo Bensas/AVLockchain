@@ -4,7 +4,6 @@ import Blockchain.Block;
 import Blockchain.TreeChain;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 
 import java.security.NoSuchAlgorithmException;
@@ -19,7 +18,7 @@ public class TreeChainTest {
     private int sizeTest;
     @Before
     public void Before() throws NoSuchAlgorithmException{
-        chain1 = new TreeChain(3);
+        chain1 = new TreeChain(2);
         chain1.add(23);
         sizeTest=1;
         dummyBlock1 = chain1.getLast();
@@ -48,10 +47,10 @@ public class TreeChainTest {
     @Test
     public void removeModifiesSize() throws NoSuchAlgorithmException {
         chain1.add(2);
-        int size = chain1.getSize();
         chain1.add(3);
+        int size = chain1.getSize();
         chain1.remove(3);
-        assertEquals(size-1, chain1.getSize());
+        assertEquals(size+1, chain1.getSize());
     }
 
     @Test
@@ -61,7 +60,7 @@ public class TreeChainTest {
 
     @Test
     public void proofOfWorkTimeTest() throws NoSuchAlgorithmException{
-        chain1.mine(dummyBlock1, TreeChain.ENCFUNCTION, chain1.getZeroes());
+        chain1.mine(dummyBlock1,TreeChain.ENCFUNCTION, chain1.getZeroes());
         Assert.assertEquals(1,1);
     }
 

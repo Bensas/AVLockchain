@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 public class TreeChain implements Serializable {
-    private static final String FIRSTHASH = "00000000000000000000000000000000";
+    public static final String FIRSTHASH = "00000000000000000000000000000000";
     public static final String ENCFUNCTION = "MD5";
     /*  Puesto que los bloques contienen transacciones, el primer bloque debe ser null.
     *   Poner un bloque que indique el árbol vacío sería erróneo puesto que
