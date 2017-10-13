@@ -94,6 +94,14 @@ public class TreeChain implements Serializable {
 
         last= new Block(last, last == null ? FIRSTHASH : last.getHash(), operation, balance.hashCode());
         lastIndex = last.getIndex();
+        generateHash(last, ENCFUNCTION); //Después de crear el bloque debe generar el hash
+        System.out.println("Mining... this could take a while");
+        long tStart = System.currentTimeMillis();
+        mine(last,ENCFUNCTION,zeroes); //Se mina el hash para que el bloque sea válido
+        long tEnd = System.currentTimeMillis();
+        long tDelta = tEnd - tStart;
+        double elapsedSeconds = tDelta / 1000.0;
+        System.out.println("Time elapsed: " + elapsedSeconds + " seconds.");
         size++;
         return result;
     }
