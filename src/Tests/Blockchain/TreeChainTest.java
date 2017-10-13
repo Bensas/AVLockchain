@@ -32,6 +32,11 @@ public class TreeChainTest {
         System.out.println(chain1.lookup(3));
     }
 
+    @Test
+    public void lookUpWithANonExistingElementReturnNull(){
+        assertTrue(chain1.lookup(5) == null);
+    }
+
 
     @Test
     public void addModifiesSize() throws NoSuchAlgorithmException {
