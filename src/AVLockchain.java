@@ -62,10 +62,10 @@ public class AVLockchain {
         }
         else if (input.contains("lookup")){
             String result = chain.lookup(Integer.parseInt(input.split("lookup ")[1]));
-            if ( result == null)
+            if (result == null)
                 System.out.println(Integer.parseInt(input.split("lookup ")[1]) + " was not found. :(");
             else
-                System.out.println(Integer.parseInt(input.split("lookup ")[1]) + " was found!");
+                System.out.println(result);
         }
         else if (input.contains("validate")){
             if (!chain.validate())
