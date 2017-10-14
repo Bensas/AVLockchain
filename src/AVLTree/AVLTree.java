@@ -355,7 +355,7 @@ public class AVLTree<T> implements Serializable{
         for (int i = 0; i < level; i++) ret += "\t";
         if(state == 1)  ret +=  "/" + current.elem.toString();
         else    ret +=  "\\" + current.elem.toString();
-        if(current.left != null) ret += "\n" + generateAsciiRepresentation(current.left,level+1,-1) + "\n";
+        if(current.left != null) ret += "\n" + generateAsciiRepresentation(current.left,level+1,-1);
         return ret;
     }
 
