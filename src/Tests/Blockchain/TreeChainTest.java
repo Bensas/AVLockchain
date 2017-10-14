@@ -31,20 +31,24 @@ public class TreeChainTest {
     }
 
     @Test
-    public void lookUpWithANonExistingElementReturnNull() throws NoSuchAlgorithmException{
+    public void lookUpWithANonExistingElementReturnNullTest() throws NoSuchAlgorithmException{
         assertTrue(chain1.lookup(5) == null);
     }
 
+    @Test
+    public void lookUpFindsExistingElementTest() throws NoSuchAlgorithmException{
+        assertTrue(chain1.lookup(23)!=null);
+    }
 
     @Test
-    public void addModifiesSize() throws NoSuchAlgorithmException {
+    public void addModifiesSizeTest() throws NoSuchAlgorithmException {
         sizeTest+=1;
         chain1.add(2);
         assertEquals(sizeTest,chain1.getSize());
     }
 
     @Test
-    public void removeModifiesSize() throws NoSuchAlgorithmException {
+    public void removeModifiesSizeTest() throws NoSuchAlgorithmException {
         chain1.add(2);
         chain1.add(3);
         int size = chain1.getSize();
@@ -53,7 +57,8 @@ public class TreeChainTest {
     }
 
     @Test
-    public void removeEmptyChainReturnsFalse() throws NoSuchAlgorithmException{
+    public void removeEmptyChainReturnsFalseTest() throws NoSuchAlgorithmException{
+        chain1.remove(23); //To make it empty
         assertFalse(chain1.remove(2));
     }
 

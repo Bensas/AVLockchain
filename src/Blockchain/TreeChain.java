@@ -7,6 +7,9 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+/**
+ * The blockchain
+ */
 public class TreeChain implements Serializable {
     // Importante!: Agregar al final de FIRSTHASH 32 ceros más
     // si se va a cambiar la ENCFUNCTION a SHA-256
