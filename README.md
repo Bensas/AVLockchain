@@ -5,7 +5,7 @@ To run the program:
 * Inside the AVLockchain directory, run the folowing command from the terminal
 
 ```sh
-java -jar TPE.jar zeroes Z
+java -jar TPE.jar zeros Z
 ```
 Where Z is the number of zeros the hash of a block must start with to be considered valid.
 
