@@ -301,7 +301,7 @@ public class AVLTree<T> implements Serializable{
         return size;
     }
     /**
-     *  Prints the tree
+     *  Prints a description of the tree
      */
     public void printTree(){
         if (head != null) {
@@ -332,25 +332,29 @@ public class AVLTree<T> implements Serializable{
             }
         }
     }
-
+    /**
+     *  Generate an Ascii representation of the tree.
+     */
     public String   getAsciiRepresentation(){
         return generateAsciiRepresentation(head,0,0);
     }
 
     /*  State: -1 = prev. was left; 0 = root; 1 = was right */
-
     private String  generateAsciiRepresentation(Node<T> current,int level,int state){
         String ret = new String();
         if(current == null){
             return "";
         }
         if(state == 0) {
-            return generateAsciiRepresentation(current.right, level + 1, 1) + "-"+ current.elem.toString() + "\n"+ generateAsciiRepresentation(current.left, level + 1, -1);
+            ret += generateAsciiRepresentation(current.right, level + 1, 1);
+            if(!ret.substring(ret.length() -1 ).equals("\n"))   ret+= "\n";
+            ret += "-"+ current.elem.toString() + "\n"+ generateAsciiRepresentation(current.left, level + 1, -1);
+            return ret;
         }
         if(current.right != null)   ret += generateAsciiRepresentation(current.right,level+1,1) + "\n";
         for (int i = 0; i < level; i++) ret += "\t";
         if(state == 1)  ret +=  "/" + current.elem.toString();
-        else    ret +=  "\\" + current.elem.toString() ;
+        else    ret +=  "\\" + current.elem.toString();
         if(current.left != null) ret += "\n" + generateAsciiRepresentation(current.left,level+1,-1) + "\n";
         return ret;
     }
