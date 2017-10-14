@@ -9,13 +9,13 @@ public class AVLockchain {
     public static void main(String args[]) throws NoSuchAlgorithmException{
         int zeroes = 0;
         if (args.length == 0 || !args[0].equals("zeros")){
-            System.out.println("Please initialize the program with the parameter 'zeroes' followed by the number of zeroes hashes must start with. Exiting program.");
+            System.out.println("Please initialize the program with the parameter 'zeros' followed by the number of zeroes hashes must start with. Exiting program.");
             System.exit(1);
         }
         try{
             zeroes = Integer.parseInt(args[1]);
         } catch (Exception e){
-            System.out.println("The number of zeroes specified is not valid. Exiting program.");
+            System.out.println("The number of zeros specified is not valid. Exiting program.");
             System.exit(1);
         }
 

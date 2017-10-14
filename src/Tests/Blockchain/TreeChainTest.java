@@ -31,7 +31,7 @@ public class TreeChainTest {
     }
 
     @Test
-    public void lookUpWithANonExistingElementReturnNull(){
+    public void lookUpWithANonExistingElementReturnNull() throws NoSuchAlgorithmException{
         assertTrue(chain1.lookup(5) == null);
     }
 
